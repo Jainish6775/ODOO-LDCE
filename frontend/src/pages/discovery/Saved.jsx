@@ -58,7 +58,7 @@ export default function Saved() {
     : savedItems.filter(item => item.type === activeTab);
 
   return (
-    <div className="saved-page">
+    <div className="saved-page page-content-padding">
       <div className="saved-header-section">
         <div>
           <h1 className="saved-title">Saved Destinations & Wishlist</h1>

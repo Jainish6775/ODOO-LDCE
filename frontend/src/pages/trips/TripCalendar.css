@@ -68,11 +68,12 @@
 
 .calendar-day {
   background: var(--neutral-0);
-  min-height: 120px;
+  min-height: 110px;
   padding: var(--space-2);
   display: flex;
   flex-direction: column;
   transition: background var(--transition-fast);
+  position: relative;
 }
 
 .calendar-day:hover {
@@ -85,22 +86,28 @@
 }
 
 .calendar-day.today {
-  background: var(--primary-50);
+  background: #ecfdf5;
+}
+
+.calendar-day-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
 }
 
 .calendar-day-number {
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   color: var(--neutral-600);
-  margin-bottom: var(--space-2);
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-semibold);
 }
 
 .calendar-day.today .calendar-day-number {
-  color: var(--primary-700);
+  color: white;
   font-weight: var(--weight-bold);
-  background: var(--primary-100);
-  width: 24px;
-  height: 24px;
+  background: #10b981;
+  width: 22px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -110,31 +117,28 @@
 .calendar-events {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
+  overflow-y: auto;
+  max-height: 75px;
 }
 
-.calendar-event {
+.calendar-event-pill {
   font-size: 11px;
+  font-weight: var(--weight-semibold);
   color: white;
-  padding: 2px var(--space-2);
-  margin: 0 -8px;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  position: relative;
-  z-index: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 150ms ease, opacity 150ms ease;
 }
 
-.calendar-event.start {
-  margin-left: 0;
-  border-top-left-radius: var(--radius-sm);
-  border-bottom-left-radius: var(--radius-sm);
-}
-
-.calendar-event.end {
-  margin-right: 0;
-  border-top-right-radius: var(--radius-sm);
-  border-bottom-right-radius: var(--radius-sm);
+.calendar-event-pill:hover {
+  transform: scale(1.03);
+  opacity: 0.9;
 }
 
 /* List View */

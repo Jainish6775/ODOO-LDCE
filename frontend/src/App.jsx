@@ -15,6 +15,7 @@ import Community from './pages/discovery/Community';
 import Saved from './pages/discovery/Saved';
 import Profile from './pages/auth/Profile';
 import NotFound from './pages/errors/NotFound';
+import LoadingScreen from './components/common/LoadingScreen';
 import './index.css';
 import './styles/components.css';
 
@@ -23,19 +24,7 @@ function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100vh',
-        flexDirection: 'column',
-        gap: '1rem',
-      }}>
-        <span style={{ fontSize: '3rem', animation: 'bounce 1.5s ease-in-out infinite' }}>🌍</span>
-        <p style={{ color: 'var(--neutral-500)', fontSize: 'var(--text-sm)' }}>Loading GlobeTrotter...</p>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   if (!isAuthenticated) {

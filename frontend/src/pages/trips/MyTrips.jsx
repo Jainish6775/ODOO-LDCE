@@ -206,7 +206,7 @@ export default function MyTrips() {
   }
 
   return (
-    <div className="trips-container-schema">
+    <div className="trips-container-schema page-content-padding">
       
       {/* Top Header */}
       <div className="trips-header flex justify-between items-center mb-4">

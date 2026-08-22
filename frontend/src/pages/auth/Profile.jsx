@@ -15,15 +15,15 @@ export default function Profile() {
   const [trips, setTrips] = useState([]);
 
   const [formData, setFormData] = useState({
-    firstName: user?.first_name || 'Jacky',
-    lastName: user?.last_name || 'Banko',
-    email: user?.email || 'abc@gmail.com',
-    phone: user?.phone || '+1 (555) 234-5678',
-    city: user?.city || 'Goa',
+    firstName: user?.first_name || 'Jainish',
+    lastName: user?.last_name || 'Talpara',
+    email: user?.email || 'jainishtalpara.in901@gmail.com',
+    phone: user?.phone || '08849736676',
+    city: user?.city || 'Rajkot',
     country: user?.country || 'India',
     bio: user?.bio || 'Avid globetrotter exploring scenic mountains, beaches, and historic landmarks across the world.',
-    preferredCurrency: user?.preferred_currency || 'USD',
-    profileImage: user?.profile_image || '',
+    preferredCurrency: user?.preferred_currency || 'INR (₹)',
+    profileImage: user?.profile_image || '/images/user_profile.png',
   });
 
   useEffect(() => {
@@ -196,18 +196,14 @@ export default function Profile() {
   });
 
   return (
-    <div className="profile-page-schema">
+    <div className="profile-page-schema page-content-padding">
       
       {/* Top Section: User Profile Header Card (Matching Screen 7 Schema) */}
       <div className="card profile-top-card">
         
         {/* Image of the User */}
         <div className="profile-avatar-circle">
-          {formData.profileImage || user?.profile_image ? (
-            <img src={formData.profileImage || user.profile_image} alt="User Avatar" className="avatar-img-full" />
-          ) : (
-            <div className="avatar-initials-large">{getInitials()}</div>
-          )}
+          <img src={formData.profileImage || user?.profile_image || '/images/user_profile.png'} alt="User Avatar" className="avatar-img-full" />
         </div>
 
         {/* User Details with appropriate option to edit those information */}
@@ -312,145 +308,172 @@ export default function Profile() {
             </div>
 
             {/* Modal Body Form */}
-            <form onSubmit={handleSaveProfile} className="p-6 flex flex-col gap-4">
-              
-              {/* Row 1: First & Last Name */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="luxury-form-label">
-                    First Name <span className="text-rose-500">*</span>
-                  </label>
-                  <input 
-                    type="text" 
-                    className="form-input rounded-xl"
-                    value={formData.firstName || ''}
-                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                    required
-                  />
+            <form onSubmit={handleSaveProfile} className="luxury-modal-body">
+              <div className="luxury-modal-scroll">
+                
+                {/* Row 1: First & Last Name */}
+                <div className="luxury-form-row-2">
+                  <div className="luxury-form-group">
+                    <label className="luxury-form-label">
+                      First Name <span className="text-rose-500">*</span>
+                    </label>
+                    <div className="luxury-input-wrapper">
+                      <FiUser className="luxury-field-icon" />
+                      <input 
+                        type="text" 
+                        className="luxury-form-input"
+                        value={formData.firstName || ''}
+                        onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="luxury-form-group">
+                    <label className="luxury-form-label">
+                      Last Name <span className="text-rose-500">*</span>
+                    </label>
+                    <div className="luxury-input-wrapper">
+                      <FiUser className="luxury-field-icon" />
+                      <input 
+                        type="text" 
+                        className="luxury-form-input"
+                        value={formData.lastName || ''}
+                        onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                        required
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label className="luxury-form-label">
-                    Last Name <span className="text-rose-500">*</span>
-                  </label>
-                  <input 
-                    type="text" 
-                    className="form-input rounded-xl"
-                    value={formData.lastName || ''}
-                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                    required
-                  />
-                </div>
-              </div>
 
-              {/* Row 2: Email & Phone */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="luxury-form-label">
-                    Email Address
-                  </label>
-                  <input 
-                    type="email" 
-                    className="form-input rounded-xl"
-                    value={formData.email || ''}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  />
+                {/* Row 2: Email & Phone */}
+                <div className="luxury-form-row-2">
+                  <div className="luxury-form-group">
+                    <label className="luxury-form-label">
+                      Email Address
+                    </label>
+                    <div className="luxury-input-wrapper">
+                      <FiMail className="luxury-field-icon" />
+                      <input 
+                        type="email" 
+                        className="luxury-form-input"
+                        value={formData.email || ''}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="luxury-form-group">
+                    <label className="luxury-form-label">
+                      Phone Number
+                    </label>
+                    <div className="luxury-input-wrapper">
+                      <FiUser className="luxury-field-icon" />
+                      <input 
+                        type="text" 
+                        className="luxury-form-input"
+                        value={formData.phone || ''}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label className="luxury-form-label">
-                    Phone Number
-                  </label>
-                  <input 
-                    type="text" 
-                    className="form-input rounded-xl"
-                    value={formData.phone || ''}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  />
-                </div>
-              </div>
 
-              {/* Row 3: City & Country */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="luxury-form-label">
-                    City
-                  </label>
-                  <input 
-                    type="text" 
-                    className="form-input rounded-xl"
-                    value={formData.city || ''}
-                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                  />
+                {/* Row 3: City & Country */}
+                <div className="luxury-form-row-2">
+                  <div className="luxury-form-group">
+                    <label className="luxury-form-label">
+                      City
+                    </label>
+                    <div className="luxury-input-wrapper">
+                      <FiMapPin className="luxury-field-icon" />
+                      <input 
+                        type="text" 
+                        className="luxury-form-input"
+                        value={formData.city || ''}
+                        onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="luxury-form-group">
+                    <label className="luxury-form-label">
+                      Country
+                    </label>
+                    <div className="luxury-input-wrapper">
+                      <FiGlobe className="luxury-field-icon" />
+                      <input 
+                        type="text" 
+                        className="luxury-form-input"
+                        value={formData.country || ''}
+                        onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label className="luxury-form-label">
-                    Country
-                  </label>
-                  <input 
-                    type="text" 
-                    className="form-input rounded-xl"
-                    value={formData.country || ''}
-                    onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                  />
-                </div>
-              </div>
 
-              {/* Row 4: Currency & Profile Image */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="luxury-form-label">
-                    Preferred Currency
-                  </label>
-                  <select 
-                    className="form-input rounded-xl"
-                    value={formData.preferredCurrency || 'USD'}
-                    onChange={(e) => setFormData({ ...formData, preferredCurrency: e.target.value })}
-                  >
-                    <option value="USD">USD ($)</option>
-                    <option value="EUR">EUR (€)</option>
-                    <option value="GBP">GBP (£)</option>
-                    <option value="INR">INR (₹)</option>
-                  </select>
+                {/* Row 4: Currency & Profile Image */}
+                <div className="luxury-form-row-2">
+                  <div className="luxury-form-group">
+                    <label className="luxury-form-label">
+                      Preferred Currency
+                    </label>
+                    <div className="luxury-input-wrapper">
+                      <FiGlobe className="luxury-field-icon" />
+                      <select 
+                        className="luxury-form-select"
+                        value={formData.preferredCurrency || 'USD'}
+                        onChange={(e) => setFormData({ ...formData, preferredCurrency: e.target.value })}
+                      >
+                        <option value="USD">USD ($)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="GBP">GBP (£)</option>
+                        <option value="INR">INR (₹)</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="luxury-form-group">
+                    <label className="luxury-form-label">
+                      Profile Image URL
+                    </label>
+                    <div className="luxury-input-wrapper">
+                      <FiUser className="luxury-field-icon" />
+                      <input 
+                        type="text" 
+                        className="luxury-form-input"
+                        placeholder="https://..."
+                        value={formData.profileImage || ''}
+                        onChange={(e) => setFormData({ ...formData, profileImage: e.target.value })}
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div>
+
+                {/* Row 5: Bio */}
+                <div className="luxury-form-group">
                   <label className="luxury-form-label">
-                    Profile Image URL
+                    About Bio
                   </label>
-                  <input 
-                    type="text" 
-                    className="form-input rounded-xl"
-                    placeholder="https://..."
-                    value={formData.profileImage || ''}
-                    onChange={(e) => setFormData({ ...formData, profileImage: e.target.value })}
+                  <textarea 
+                    className="luxury-form-textarea" 
+                    rows="3"
+                    placeholder="Tell other travelers a bit about yourself..."
+                    value={formData.bio || ''}
+                    onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
                   />
                 </div>
-              </div>
 
-              {/* Row 5: Bio */}
-              <div>
-                <label className="luxury-form-label">
-                  About Bio
-                </label>
-                <textarea 
-                  className="form-input rounded-xl" 
-                  rows="3"
-                  placeholder="Tell other travelers a bit about yourself..."
-                  value={formData.bio || ''}
-                  onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                />
               </div>
 
               {/* Action Buttons */}
-              <div className="flex justify-end gap-3 pt-3 border-t mt-2">
+              <div className="luxury-modal-footer">
                 <button 
                   type="button" 
-                  className="btn btn-ghost"
+                  className="btn-luxury-cancel"
                   onClick={() => setShowEditModal(false)}
                 >
                   Cancel
                 </button>
                 <button 
                   type="submit" 
-                  className="btn btn-primary"
+                  className="btn-luxury-submit"
                   disabled={saving}
                 >
                   <FiSave size={16} /> {saving ? 'Saving...' : 'Save Changes'}

@@ -12,6 +12,11 @@ export default function Dashboard() {
   const [quickDest, setQuickDest] = useState('');
   const [quickDuration, setQuickDuration] = useState('3');
   const [quickStyle, setQuickStyle] = useState('moderate');
+  const [activeBannerIdx, setActiveBannerIdx] = useState(0);
+
+  const bannerImages = [
+    '/images/dashboard_banner_1787378478140.jpg',
+  ];
 
   // Search & Filter & Sort State
   const [searchQuery, setSearchQuery] = useState('');
@@ -128,9 +133,10 @@ export default function Dashboard() {
       {/* Banner Section with Quick Trip Launcher */}
       <section className="banner-section">
         <img 
-          src="/images/dashboard_banner_1787378478140.jpg" 
+          key={activeBannerIdx}
+          src={bannerImages[activeBannerIdx]} 
           alt="Travel Banner" 
-          className="banner-image" 
+          className="banner-image animate-fade-in" 
         />
         <div className="banner-overlay">
           <div className="banner-content">
@@ -175,8 +181,9 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* Quick Stats Overview */}
-      <section className="stats-overview-grid">
+      {/* Quick Stats Overview & Lower Content Wrapper */}
+      <div className="page-content-padding flex flex-col gap-8">
+        <section className="stats-overview-grid">
         <div className="stat-card">
           <div className="stat-card-icon">✈️</div>
           <div className="stat-card-data">
@@ -360,16 +367,71 @@ export default function Dashboard() {
         )}
       </section>
 
-      {/* Floating Action Button */}
-      <button className="fab-plan-trip" onClick={() => navigate('/trips/new')}>
-        <FiPlus size={20} /> Plan a Trip
-      </button>
+      {/* Live Destination Weather Assistant */}
+      <section className="dashboard-section">
+        <div className="section-header-flex">
+          <h2 className="section-title">Live Destination Weather</h2>
+          <span className="section-hint">Updated 5m ago</span>
+        </div>
+        <div className="weather-grid-luxury">
+          <div className="weather-card-item">
+            <div className="weather-card-header">
+              <span className="weather-city">Kyoto, Japan</span>
+              <span className="weather-emoji">☀️</span>
+            </div>
+            <div className="weather-temp">24°C</div>
+            <span className="weather-badge badge-emerald">Sunny • Perfect Day</span>
+          </div>
+
+          <div className="weather-card-item">
+            <div className="weather-card-header">
+              <span className="weather-city">Paris, France</span>
+              <span className="weather-emoji">🌤️</span>
+            </div>
+            <div className="weather-temp">18°C</div>
+            <span className="weather-badge badge-blue">Partly Cloudy • Mild</span>
+          </div>
+
+          <div className="weather-card-item">
+            <div className="weather-card-header">
+              <span className="weather-city">Goa, India</span>
+              <span className="weather-emoji">🌅</span>
+            </div>
+            <div className="weather-temp">29°C</div>
+            <span className="weather-badge badge-amber">Tropical Breeze</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Travel Essentials Checklist */}
+      <section className="dashboard-section">
+        <div className="section-header-flex">
+          <h2 className="section-title">Travel Essentials Checklist</h2>
+          <span className="section-hint">Smart Trip Packing</span>
+        </div>
+        <div className="checklist-grid-luxury">
+          {[
+            { id: 1, text: 'Passport & Visas Verified', done: true },
+            { id: 2, text: 'Flight Tickets & Hotel E-Pass', done: true },
+            { id: 3, text: 'International Travel Insurance', done: false },
+            { id: 4, text: 'Universal Power Adapter & Powerbank', done: false },
+          ].map((item) => (
+            <label key={item.id} className="checklist-card-item">
+              <input type="checkbox" defaultChecked={item.done} className="checklist-checkbox" />
+              <span className="checklist-text">{item.text}</span>
+            </label>
+          ))}
+        </div>
+      </section>
+    </div>
+
+
 
       <style>{`
         .landing-page {
           display: flex;
           flex-direction: column;
-          gap: var(--space-8);
+          gap: 0;
           padding-bottom: var(--space-20);
           position: relative;
         }
@@ -399,10 +461,11 @@ export default function Dashboard() {
         .banner-section {
           position: relative;
           width: 100%;
-          min-height: 340px;
-          border-radius: var(--radius-xl);
+          min-height: 400px;
+          border-radius: 0 0 24px 24px;
           overflow: hidden;
           box-shadow: var(--shadow-md);
+          margin-bottom: var(--space-6);
         }
 
         .banner-image {
@@ -537,36 +600,149 @@ export default function Dashboard() {
           margin-top: 2px;
         }
 
-        /* Controls */
+        /* Weather & Checklist Luxury Grids */
+        .weather-grid-luxury {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: var(--space-4);
+        }
+
+        .weather-card-item {
+          background: #ffffff;
+          border: 1px solid #e2e8f0;
+          border-radius: 20px;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+          transition: transform 200ms ease, box-shadow 200ms ease;
+        }
+
+        .weather-card-item:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+        }
+
+        .weather-card-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .weather-city {
+          font-weight: 700;
+          color: #0f172a;
+          font-size: 0.95rem;
+        }
+
+        .weather-emoji {
+          font-size: 1.5rem;
+        }
+
+        .weather-temp {
+          font-family: var(--font-display);
+          font-size: 2.25rem;
+          font-weight: 800;
+          color: #0f172a;
+          line-height: 1;
+        }
+
+        .weather-badge {
+          display: inline-block;
+          font-size: 0.75rem;
+          font-weight: 600;
+          padding: 4px 10px;
+          border-radius: 999px;
+          width: fit-content;
+        }
+
+        .badge-emerald { background: #ecfdf5; color: #059669; }
+        .badge-blue { background: #eff6ff; color: #2563eb; }
+        .badge-amber { background: #fffbeb; color: #d97706; }
+
+        .checklist-grid-luxury {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: var(--space-4);
+        }
+
+        .checklist-card-item {
+          background: #ffffff;
+          border: 1px solid #e2e8f0;
+          border-radius: 16px;
+          padding: 16px 20px;
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          cursor: pointer;
+          transition: background 200ms ease, border-color 200ms ease;
+          box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+        }
+
+        .checklist-card-item:hover {
+          background: #f8fafc;
+          border-color: #cbd5e1;
+        }
+
+        .checklist-checkbox {
+          width: 18px;
+          height: 18px;
+          accent-color: #2563eb;
+          cursor: pointer;
+        }
+
+        .checklist-text {
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: #1e293b;
+        }
+
+        @media (max-width: 768px) {
+          .weather-grid-luxury,
+          .checklist-grid-luxury {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        /* Controls Toolbar Card */
         .controls-section {
           display: flex;
           flex-wrap: wrap;
           gap: var(--space-4);
           align-items: center;
           justify-content: space-between;
+          background: #ffffff;
+          border: 1px solid #e2e8f0;
+          border-radius: 20px;
+          padding: 16px 24px;
+          box-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.05);
+          margin-bottom: var(--space-6);
         }
 
         .search-wrapper {
           flex: 1;
-          min-width: 250px;
+          min-width: 280px;
           display: flex;
           align-items: center;
-          background: var(--neutral-0);
-          border: 1px solid var(--neutral-300);
-          border-radius: var(--radius-full);
-          padding: var(--space-2) var(--space-4);
-          transition: var(--transition-fast);
+          background: #f8fafc;
+          border: 1px solid #cbd5e1;
+          border-radius: 12px;
+          padding: 10px 16px;
+          transition: all 200ms ease;
           position: relative;
         }
 
         .search-wrapper:focus-within {
-          border-color: var(--primary-500);
-          box-shadow: 0 0 0 3px rgba(32, 201, 151, 0.15);
+          border-color: #10b981;
+          box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+          background: #ffffff;
         }
 
         .search-icon {
-          color: var(--neutral-500);
-          margin-right: var(--space-2);
+          color: #64748b;
+          margin-right: 10px;
+          font-size: 1.1rem;
         }
 
         .search-input {
@@ -574,11 +750,24 @@ export default function Dashboard() {
           border: none;
           outline: none;
           background: transparent;
-          font-size: var(--text-sm);
-          color: var(--neutral-800);
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: #0f172a;
         }
 
         .clear-search-btn {
+          background: #e2e8f0;
+          border: none;
+          border-radius: 50%;
+          width: 20px;
+          height: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 12px;
+          cursor: pointer;
+          color: #475569;
+        }
           border: none;
           background: transparent;
           font-size: 18px;

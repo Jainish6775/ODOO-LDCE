@@ -112,7 +112,7 @@ export default function Community() {
   }
 
   return (
-    <div className="community-container">
+    <div className="community-container page-content-padding">
       <div className="community-header">
         <h1>Travel Community</h1>
         <p className="text-neutral-500">Get inspired, ask questions, and share your adventures.</p>

@@ -52,11 +52,7 @@ export default function Sidebar() {
       <div className="sidebar-footer">
         <div className="sidebar-user-profile">
           <div className="sidebar-user-info">
-            {user?.profile_image ? (
-              <img src={user.profile_image} alt={user.first_name} className="avatar" />
-            ) : (
-              <div className="avatar">{getInitials()}</div>
-            )}
+            <img src={user?.profile_image || '/images/user_profile.png'} alt={user?.first_name || 'User'} className="avatar" />
             <div className="sidebar-user-text">
               <div className="sidebar-user-name">{user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'User' : 'Guest'}</div>
               <div className="sidebar-user-email">{user?.email || 'traveler@globetrotter.com'}</div>

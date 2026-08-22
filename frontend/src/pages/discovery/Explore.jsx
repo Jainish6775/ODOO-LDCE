@@ -165,7 +165,7 @@ export default function Explore() {
   };
 
   return (
-    <div className="explore-container">
+    <div className="explore-container page-content-padding">
       {/* Hero Search Section */}
       <div className="explore-hero">
         <h1 className="explore-hero-title">Where to next?</h1>
