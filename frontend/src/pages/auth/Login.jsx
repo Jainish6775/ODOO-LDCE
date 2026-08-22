@@ -51,8 +51,11 @@ export default function Login() {
       {/* Left Hero */}
       <div className="auth-hero hide-mobile">
         <div className="auth-hero-content">
-          <span className="auth-hero-emoji">✈️</span>
-          <h1 className="auth-hero-title">Your Journey Starts Here</h1>
+          <div className="auth-hero-badge">
+            <span className="auth-hero-badge-dot"></span>
+            <span>Your Ultimate Travel Companion</span>
+          </div>
+          <h1 className="auth-hero-title mt-4">Your Journey Starts Here</h1>
           <p className="auth-hero-subtitle">
             Plan multi-city itineraries, track budgets, and discover destinations loved by travelers worldwide.
           </p>
@@ -63,7 +66,7 @@ export default function Login() {
       <div className="auth-form-side">
         <div className="auth-form-container">
           <div className="auth-form-logo">
-            <span className="auth-form-logo-icon">🌍</span>
+            <img src="/logo.jpg" alt="GlobeTrotter" style={{ height: '48px', width: '48px', borderRadius: '10px', objectFit: 'cover' }} />
             <span className="auth-form-logo-text">GlobeTrotter</span>
           </div>
 

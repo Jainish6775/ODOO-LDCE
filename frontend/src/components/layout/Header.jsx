@@ -9,18 +9,35 @@ export default function Header() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const menuRef = useRef(null);
+  const notifRef = useRef(null);
+
+  const [notifications, setNotifications] = useState([
+    { id: 1, title: 'Trip Updated', message: 'New activity added to Kyoto itinerary.', time: '10m ago', unread: true },
+    { id: 2, title: 'Community Interaction', message: 'Sarah liked your Japan travel guide.', time: '1h ago', unread: true },
+    { id: 3, title: 'Upcoming Flight', message: 'Flight to Tokyo departs in 3 days.', time: '5h ago', unread: true },
+  ]);
+
+  const unreadCount = notifications.filter(n => n.unread).length;
 
   useEffect(() => {
     function handleClickOutside(e) {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setShowUserMenu(false);
       }
+      if (notifRef.current && !notifRef.current.contains(e.target)) {
+        setShowNotifications(false);
+      }
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const markAllRead = () => {
+    setNotifications(notifications.map(n => ({ ...n, unread: false })));
+  };
 
   const handleLogout = () => {
     logout();
@@ -46,7 +63,7 @@ export default function Header() {
       <div className="header-inner">
         {/* Logo (Visible only on mobile now) */}
         <Link to="/" className="header-logo show-mobile">
-          <span className="header-logo-icon">🌍</span>
+          <img src="/logo.jpg" alt="GlobeTrotter" style={{ height: '32px', width: '32px', borderRadius: '6px', objectFit: 'cover' }} />
           <span className="header-logo-text">GlobeTrotter</span>
         </Link>
 
@@ -62,13 +79,44 @@ export default function Header() {
           </Link>
 
           {/* Notifications */}
-          <button className="header-icon-btn hide-mobile" data-tooltip="Notifications">
-            <FiBell />
-            <span className="notification-dot"></span>
-          </button>
+          <div className="header-notif-menu hide-mobile" ref={notifRef}>
+            <button
+              className="header-icon-btn"
+              onClick={() => {
+                setShowNotifications(!showNotifications);
+                setShowUserMenu(false);
+              }}
+              data-tooltip="Notifications"
+            >
+              <FiBell />
+              {unreadCount > 0 && <span className="notification-dot"></span>}
+            </button>
 
-          {/* User Menu */}
-          <div className="header-user-menu" ref={menuRef}>
+            {showNotifications && (
+              <div className="notif-dropdown">
+                <div className="notif-dropdown-header">
+                  <h4>Notifications</h4>
+                  {unreadCount > 0 && (
+                    <button className="notif-mark-btn" onClick={markAllRead}>
+                      Mark read
+                    </button>
+                  )}
+                </div>
+                <div className="notif-list">
+                  {notifications.map((n) => (
+                    <div key={n.id} className={`notif-item ${n.unread ? 'unread' : ''}`}>
+                      <div className="notif-item-title">{n.title}</div>
+                      <div className="notif-item-msg">{n.message}</div>
+                      <div className="notif-item-time">{n.time}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* User Menu (Mobile Only) */}
+          <div className="header-user-menu show-mobile" ref={menuRef}>
             <button
               className="header-avatar-btn"
               onClick={() => setShowUserMenu(!showUserMenu)}

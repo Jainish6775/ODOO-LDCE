@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { authAPI } from '../../services/api';
+import { toast } from 'react-hot-toast';
 import { FiEye, FiEyeOff, FiAlertCircle, FiCheck } from 'react-icons/fi';
 import '../../../src/components/layout/AppLayout.css';
 
@@ -95,7 +96,7 @@ export default function Register() {
 
     setLoading(true);
     try {
-      await register({
+      await authAPI.register({
         email: formData.email,
         password: formData.password,
         firstName: formData.firstName,
@@ -106,7 +107,8 @@ export default function Register() {
         bio: formData.bio || undefined,
         interests: formData.interests.length > 0 ? formData.interests : undefined,
       });
-      navigate('/');
+      toast.success('Account created successfully! Please sign in.');
+      navigate('/login');
     } catch (err) {
       setError(err.response?.data?.error || 'Registration failed. Please try again.');
     } finally {
@@ -121,8 +123,11 @@ export default function Register() {
       {/* Left Hero */}
       <div className="auth-hero hide-mobile">
         <div className="auth-hero-content">
-          <span className="auth-hero-emoji">🗺️</span>
-          <h1 className="auth-hero-title">Start Your Adventure</h1>
+          <div className="auth-hero-badge">
+            <span className="auth-hero-badge-dot"></span>
+            <span>Join GlobeTrotter Today</span>
+          </div>
+          <h1 className="auth-hero-title mt-4">Start Your Adventure</h1>
           <p className="auth-hero-subtitle">
             Join thousands of travelers building beautiful itineraries, discovering hidden gems, and sharing journeys.
           </p>
@@ -133,7 +138,7 @@ export default function Register() {
       <div className="auth-form-side">
         <div className="auth-form-container">
           <div className="auth-form-logo">
-            <span className="auth-form-logo-icon">🌍</span>
+            <img src="/logo.jpg" alt="GlobeTrotter" style={{ height: '48px', width: '48px', borderRadius: '10px', objectFit: 'cover' }} />
             <span className="auth-form-logo-text">GlobeTrotter</span>
           </div>
 

@@ -12,6 +12,8 @@ import TripDetails from './pages/trips/TripDetails';
 import TripCalendar from './pages/trips/TripCalendar';
 import Explore from './pages/discovery/Explore';
 import Community from './pages/discovery/Community';
+import Saved from './pages/discovery/Saved';
+import Profile from './pages/auth/Profile';
 import NotFound from './pages/errors/NotFound';
 import './index.css';
 import './styles/components.css';
@@ -107,12 +109,8 @@ function App() {
             <Route path="trips/:id" element={<TripDetails />} />
             <Route path="calendar" element={<TripCalendar />} />
             <Route path="community" element={<Community />} />
-            <Route path="saved" element={
-              <PlaceholderPage title="Saved Destinations" emoji="💾" description="Your bookmarked cities and activities." />
-            } />
-            <Route path="profile" element={
-              <PlaceholderPage title="Profile" emoji="👤" description="Manage your personal details and preferences." />
-            } />
+            <Route path="saved" element={<Saved />} />
+            <Route path="profile" element={<Profile />} />
           </Route>
 
           {/* Catch-all */}

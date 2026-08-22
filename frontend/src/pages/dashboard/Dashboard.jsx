@@ -23,7 +23,7 @@ export default function Dashboard() {
   return (
     <div className="landing-page">
       
-      {/* Banner Section */}
+      {/* Banner Section with Quick Trip Launcher */}
       <section className="banner-section">
         <img 
           src="/images/dashboard_banner_1787378478140.jpg" 
@@ -31,8 +31,72 @@ export default function Dashboard() {
           className="banner-image" 
         />
         <div className="banner-overlay">
-          <h1 className="banner-title">Welcome back, {user?.firstName || 'Traveler'}</h1>
-          <p className="banner-subtitle">Ready for your next adventure?</p>
+          <div className="banner-content">
+            <h1 className="banner-title">Welcome back, {user?.first_name || 'Traveler'}</h1>
+            <p className="banner-subtitle">Where are you exploring next?</p>
+          </div>
+
+          {/* Quick Trip Search Card */}
+          <div className="quick-search-card">
+            <div className="quick-search-field">
+              <label>Destination</label>
+              <input type="text" placeholder="Where to? (e.g. Kyoto, Paris)" />
+            </div>
+            <div className="quick-search-divider"></div>
+            <div className="quick-search-field">
+              <label>Duration</label>
+              <select defaultValue="3">
+                <option value="3">3 Days</option>
+                <option value="5">5 Days</option>
+                <option value="7">7 Days</option>
+                <option value="14">2 Weeks</option>
+              </select>
+            </div>
+            <div className="quick-search-divider"></div>
+            <div className="quick-search-field">
+              <label>Style</label>
+              <select defaultValue="moderate">
+                <option value="budget">Budget</option>
+                <option value="moderate">Moderate</option>
+                <option value="luxury">Luxury</option>
+              </select>
+            </div>
+            <Link to="/trips/new" className="btn btn-primary btn-search-go">
+              Plan Trip
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Quick Stats Overview */}
+      <section className="stats-overview-grid">
+        <div className="stat-card">
+          <div className="stat-card-icon">✈️</div>
+          <div className="stat-card-data">
+            <div className="stat-card-value">12</div>
+            <div className="stat-card-label">Total Trips</div>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-card-icon">🌍</div>
+          <div className="stat-card-data">
+            <div className="stat-card-value">8</div>
+            <div className="stat-card-label">Countries Visited</div>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-card-icon">💾</div>
+          <div className="stat-card-data">
+            <div className="stat-card-value">24</div>
+            <div className="stat-card-label">Saved Wishlist</div>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-card-icon">💰</div>
+          <div className="stat-card-data">
+            <div className="stat-card-value">$2,450</div>
+            <div className="stat-card-label">Budget Tracked</div>
+          </div>
         </div>
       </section>
 
@@ -42,7 +106,7 @@ export default function Dashboard() {
           <FiSearch className="search-icon" />
           <input 
             type="text" 
-            placeholder="Search destinations, trips..." 
+            placeholder="Search destinations, trips, activities..." 
             className="search-input"
           />
         </div>
@@ -89,10 +153,7 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* Floating Action Button */}
-      <Link to="/trips/new" className="fab-plan-trip">
-        <FiPlus /> Plan a trip
-      </Link>
+
 
       <style>{`
         .landing-page {
@@ -107,7 +168,7 @@ export default function Dashboard() {
         .banner-section {
           position: relative;
           width: 100%;
-          height: 320px;
+          min-height: 340px;
           border-radius: var(--radius-xl);
           overflow: hidden;
           box-shadow: var(--shadow-md);
@@ -123,10 +184,10 @@ export default function Dashboard() {
         .banner-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
+          background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
           display: flex;
           flex-direction: column;
-          justify-content: flex-end;
+          justify-content: space-between;
           padding: var(--space-8);
           color: white;
         }
@@ -134,13 +195,115 @@ export default function Dashboard() {
         .banner-title {
           color: white;
           font-size: var(--text-4xl);
-          margin-bottom: var(--space-2);
-          text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+          margin-bottom: var(--space-1);
+          text-shadow: 0 2px 4px rgba(0,0,0,0.4);
         }
 
         .banner-subtitle {
           font-size: var(--text-lg);
           opacity: 0.9;
+        }
+
+        /* Quick Search Card */
+        .quick-search-card {
+          display: flex;
+          align-items: center;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border-radius: var(--radius-xl);
+          padding: var(--space-3) var(--space-4);
+          gap: var(--space-4);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+          max-width: 780px;
+          margin-top: var(--space-4);
+        }
+
+        .quick-search-field {
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+        }
+
+        .quick-search-field label {
+          font-size: 11px;
+          font-weight: var(--weight-bold);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: var(--neutral-500);
+          margin-bottom: 2px;
+        }
+
+        .quick-search-field input,
+        .quick-search-field select {
+          border: none;
+          outline: none;
+          background: transparent;
+          font-size: var(--text-sm);
+          font-weight: var(--weight-semibold);
+          color: var(--neutral-900);
+          padding: 0;
+        }
+
+        .quick-search-divider {
+          width: 1px;
+          height: 32px;
+          background: var(--neutral-200);
+        }
+
+        .btn-search-go {
+          border-radius: var(--radius-lg);
+          padding: var(--space-3) var(--space-6);
+        }
+
+        /* Stats Overview Grid */
+        .stats-overview-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: var(--space-4);
+        }
+
+        .stat-card {
+          display: flex;
+          align-items: center;
+          gap: var(--space-4);
+          background: var(--neutral-0);
+          border: 1px solid var(--neutral-200);
+          border-radius: var(--radius-lg);
+          padding: var(--space-4) var(--space-5);
+          box-shadow: var(--shadow-sm);
+          transition: transform 250ms ease, box-shadow 250ms ease;
+        }
+
+        .stat-card:hover {
+          transform: translateY(-3px);
+          box-shadow: var(--shadow-md);
+        }
+
+        .stat-card-icon {
+          font-size: 2rem;
+          width: 48px;
+          height: 48px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: var(--neutral-100);
+          border-radius: var(--radius-md);
+        }
+
+        .stat-card-value {
+          font-family: var(--font-display);
+          font-size: var(--text-2xl);
+          font-weight: var(--weight-bold);
+          color: var(--neutral-900);
+          line-height: 1.1;
+        }
+
+        .stat-card-label {
+          font-size: var(--text-xs);
+          color: var(--neutral-500);
+          font-weight: var(--weight-medium);
+          margin-top: 2px;
         }
 
         /* Controls */
