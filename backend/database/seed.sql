@@ -1,21 +1,9 @@
 -- ============================================
--- GlobeTrotter Sample Data (Seed)
+-- GlobeTrotter Sample Data (Seed) - PostgreSQL
 -- ============================================
-USE globetrotter;
 
--- Clear existing data (be careful in production)
-SET FOREIGN_KEY_CHECKS = 0;
-TRUNCATE TABLE expenses;
-TRUNCATE TABLE transports;
-TRUNCATE TABLE accommodations;
-TRUNCATE TABLE scheduled_activities;
-TRUNCATE TABLE trip_stops;
-TRUNCATE TABLE trips;
-TRUNCATE TABLE activities;
-TRUNCATE TABLE destinations;
-TRUNCATE TABLE travel_interests;
-TRUNCATE TABLE users;
-SET FOREIGN_KEY_CHECKS = 1;
+-- Clear existing data
+TRUNCATE TABLE expenses, transports, accommodations, scheduled_activities, trip_stops, trips, activities, destinations, travel_interests, users RESTART IDENTITY CASCADE;
 
 -- ============================================
 -- Destinations
@@ -32,6 +20,9 @@ INSERT INTO destinations (id, name, country, region, description, image_url, cos
 (9, 'Kyoto', 'Japan', 'Asia', 'Once the capital of Japan, famous for its numerous classical Buddhist temples, gardens, imperial palaces, Shinto shrines and traditional wooden houses.', 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&q=80&w=1000', 'moderate', 94, 4, 35.0116, 135.7681),
 (10, 'Barcelona', 'Spain', 'Europe', 'The cosmopolitan capital of Spain''s Catalonia region, known for its art and architecture.', 'https://images.unsplash.com/photo-1583422409516-2895a77efded?auto=format&fit=crop&q=80&w=1000', 'moderate', 95, 4, 41.3851, 2.1734);
 
+-- Reset the sequence to continue after our manually set IDs
+SELECT setval('destinations_id_seq', (SELECT MAX(id) FROM destinations));
+
 -- ============================================
 -- Activities
 -- ============================================
@@ -47,3 +38,6 @@ INSERT INTO activities (id, destination_id, name, description, category, duratio
 (9, 4, 'Mount Batur Sunrise Trek', 'Hike up an active volcano to watch a spectacular sunrise over Bali.', 'Adventure', 8.0, 60.00, 4.8, 'https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&q=80&w=1000'),
 (10, 5, 'Statue of Liberty & Ellis Island', 'Take the ferry to visit these iconic symbols of American freedom and immigration.', 'History', 4.0, 30.00, 4.7, 'https://images.unsplash.com/photo-1605130284535-11dd9eedc58a?auto=format&fit=crop&q=80&w=1000'),
 (11, 5, 'Broadway Show Ticket', 'Experience the magic of live theater in Times Square.', 'Entertainment', 3.0, 150.00, 4.9, 'https://images.unsplash.com/photo-1522869635100-9f4c5e86fee3?auto=format&fit=crop&q=80&w=1000');
+
+-- Reset the sequence to continue after our manually set IDs
+SELECT setval('activities_id_seq', (SELECT MAX(id) FROM activities));

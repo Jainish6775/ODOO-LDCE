@@ -1,12 +1,12 @@
 const express = require('express');
 const tripController = require('../controllers/trip.controller');
 const tripStopController = require('../controllers/trip_stop.controller');
-const auth = require('../middleware/auth');
+const { authenticate } = require('../middleware/auth');
 
 const router = express.Router();
 
 // All trip routes require authentication
-router.use(auth);
+router.use(authenticate);
 
 // --- Trip Routes ---
 router.get('/', tripController.getMyTrips);

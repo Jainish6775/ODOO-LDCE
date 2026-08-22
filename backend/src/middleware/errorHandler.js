@@ -9,7 +9,8 @@ function errorHandler(err, req, res, next) {
     });
   }
 
-  if (err.code === 'ER_DUP_ENTRY') {
+  // PostgreSQL unique violation error code
+  if (err.code === '23505') {
     return res.status(409).json({
       error: 'Duplicate entry. This record already exists.',
     });

@@ -1,27 +1,20 @@
-const mysql = require('mysql2/promise');
+const { Pool } = require('pg');
 const config = require('./env');
 
-const pool = mysql.createPool({
-  host: config.db.host,
-  port: config.db.port,
-  user: config.db.user,
-  password: config.db.password,
-  database: config.db.database,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  enableKeepAlive: true,
-  keepAliveInitialDelay: 0,
+const pool = new Pool({
+  connectionString: config.databaseUrl,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 // Test connection on startup
-pool.getConnection()
-  .then((connection) => {
-    console.log('✅ MySQL connected successfully');
-    connection.release();
+pool.query('SELECT NOW()')
+  .then(() => {
+    console.log('✅ PostgreSQL (Neon) connected successfully');
   })
   .catch((err) => {
-    console.error('❌ MySQL connection failed:', err.message);
+    console.error('❌ PostgreSQL connection failed:', err.message);
   });
 
 module.exports = pool;

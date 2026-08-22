@@ -12,7 +12,7 @@ async function authenticate(req, res, next) {
     const decoded = verifyToken(token);
 
     // Verify user still exists
-    const [rows] = await db.execute('SELECT id, email, role FROM users WHERE id = ?', [decoded.id]);
+    const { rows } = await db.query('SELECT id, email, role FROM users WHERE id = $1', [decoded.id]);
     if (rows.length === 0) {
       return res.status(401).json({ error: 'User no longer exists.' });
     }

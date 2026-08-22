@@ -1,21 +1,19 @@
 const fs = require('fs');
 const path = require('path');
-const mysql = require('mysql2/promise');
+const { Client } = require('pg');
 const config = require('../src/config/env');
 
 async function run() {
-  let connection;
-  try {
-    // Connect without database first to create it
-    connection = await mysql.createConnection({
-      host: config.db.host,
-      port: config.db.port,
-      user: config.db.user,
-      password: config.db.password,
-      multipleStatements: true,
-    });
+  const client = new Client({
+    connectionString: config.databaseUrl,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  });
 
-    console.log('Connected to MySQL server.');
+  try {
+    await client.connect();
+    console.log('Connected to PostgreSQL (Neon) server.');
 
     const schemaPath = path.join(__dirname, '../database/schema.sql');
     const seedPath = path.join(__dirname, '../database/seed.sql');
@@ -24,19 +22,17 @@ async function run() {
     const seedSql = fs.readFileSync(seedPath, 'utf8');
 
     console.log('Running schema.sql...');
-    await connection.query(schemaSql);
+    await client.query(schemaSql);
     console.log('Schema created successfully.');
 
     console.log('Running seed.sql...');
-    await connection.query(seedSql);
+    await client.query(seedSql);
     console.log('Seed data inserted successfully.');
 
   } catch (error) {
     console.error('Error setting up database:', error);
   } finally {
-    if (connection) {
-      await connection.end();
-    }
+    await client.end();
     process.exit(0);
   }
 }
