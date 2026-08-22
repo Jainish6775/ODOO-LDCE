@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { FiArrowLeft, FiPlus, FiMapPin, FiClock, FiDollarSign, FiMoreVertical, FiCoffee, FiCamera, FiHome, FiNavigation, FiCalendar, FiSave, FiEye, FiShare2, FiChevronDown, FiChevronUp, FiTrash2 } from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
 import { tripsAPI, stopsAPI, itineraryAPI } from '../../services/api';
+import MapView from '../../components/common/MapView';
 import './ItineraryBuilder.css';
 
 export default function ItineraryBuilder() {
@@ -140,6 +141,14 @@ export default function ItineraryBuilder() {
                   style={{ width: `${Math.min((totalCost / (trip?.budget || 1)) * 100, 100)}%` }}
                 ></div>
               </div>
+            </div>
+          </div>
+
+          {/* Interactive Map Visualizer */}
+          <div className="card map-widget mb-4">
+            <div className="card-body p-2">
+              <h3 className="widget-title mb-2 px-2 pt-2">Interactive Route Map</h3>
+              <MapView stops={stops} />
             </div>
           </div>
 

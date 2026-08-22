@@ -81,6 +81,32 @@ export default function Community() {
     }
   };
 
+  const [newPostText, setNewPostText] = useState('');
+
+  const handleCreatePost = (e) => {
+    e.preventDefault();
+    if (!newPostText.trim()) return;
+
+    const newPost = {
+      id: Date.now(),
+      author: {
+        name: 'You',
+        handle: '@traveler',
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+      },
+      timeAgo: 'Just now',
+      content: newPostText,
+      likes: 0,
+      comments: 0,
+      liked: false,
+      saved: false
+    };
+
+    setPosts([newPost, ...posts]);
+    setNewPostText('');
+    toast.success('Story posted to community feed!');
+  };
+
   if (loading) {
     return <div className="loading-spinner-container"><div className="spinner"></div></div>;
   }
@@ -96,7 +122,7 @@ export default function Community() {
         {/* Main Feed */}
         <div className="community-feed">
           {/* Create Post Input */}
-          <div className="card create-post-card mb-6">
+          <form className="card create-post-card mb-6" onSubmit={handleCreatePost}>
             <div className="card-body">
               <div className="create-post-input-area">
                 <div className="avatar">ME</div>
@@ -104,19 +130,21 @@ export default function Community() {
                   type="text" 
                   className="form-input" 
                   placeholder="Share your travel experiences or ask for advice..." 
+                  value={newPostText}
+                  onChange={(e) => setNewPostText(e.target.value)}
                   style={{ borderRadius: 'var(--radius-full)' }}
                 />
               </div>
               <div className="create-post-actions mt-3">
-                <button className="btn btn-ghost btn-sm text-primary-600">
+                <button type="button" className="btn btn-ghost btn-sm text-primary-600" onClick={() => toast('Select a trip to attach...')}>
                   <FiMapPin /> Attach Trip
                 </button>
-                <button className="btn btn-primary btn-sm">
+                <button type="submit" className="btn btn-primary btn-sm">
                   Post
                 </button>
               </div>
             </div>
-          </div>
+          </form>
 
           <div className="tabs feed-tabs mb-6">
             {['For You', 'Following', 'Trending'].map(tab => (
