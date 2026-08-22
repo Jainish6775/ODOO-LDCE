@@ -44,26 +44,14 @@ export default function Header() {
   return (
     <header className="header">
       <div className="header-inner">
-        {/* Logo */}
-        <Link to="/" className="header-logo">
+        {/* Logo (Visible only on mobile now) */}
+        <Link to="/" className="header-logo show-mobile">
           <span className="header-logo-icon">🌍</span>
           <span className="header-logo-text">GlobeTrotter</span>
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="header-nav hide-mobile">
-          {navLinks.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              className={({ isActive }) => `header-nav-link ${isActive ? 'active' : ''}`}
-              end={link.to === '/'}
-            >
-              {link.icon}
-              <span>{link.label}</span>
-            </NavLink>
-          ))}
-        </nav>
+        {/* Spacer to push actions to the right */}
+        <div style={{ flex: 1 }}></div>
 
         {/* Right Actions */}
         <div className="header-actions">

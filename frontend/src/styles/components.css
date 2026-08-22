@@ -48,14 +48,16 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+  background: var(--primary-500);
   color: white;
-  box-shadow: var(--shadow-md), 0 2px 8px rgba(32, 201, 151, 0.25);
+  box-shadow: var(--shadow-md), 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform-style: preserve-3d;
 }
 
 .btn-primary:hover {
-  box-shadow: var(--shadow-lg), 0 4px 16px rgba(32, 201, 151, 0.35);
-  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg), 0 8px 24px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px) scale(1.02);
+  background: var(--primary-600);
 }
 
 .btn-accent {
@@ -170,8 +172,8 @@
 
 .form-input:focus {
   outline: none;
-  border-color: var(--primary-400);
-  box-shadow: 0 0 0 3px rgba(32, 201, 151, 0.15);
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
 }
 
 .form-input::placeholder {

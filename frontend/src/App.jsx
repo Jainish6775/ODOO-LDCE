@@ -9,6 +9,9 @@ import MyTrips from './pages/trips/MyTrips';
 import CreateTrip from './pages/trips/CreateTrip';
 import ItineraryBuilder from './pages/trips/ItineraryBuilder';
 import TripDetails from './pages/trips/TripDetails';
+import TripCalendar from './pages/trips/TripCalendar';
+import Explore from './pages/discovery/Explore';
+import Community from './pages/discovery/Community';
 import NotFound from './pages/errors/NotFound';
 import './index.css';
 import './styles/components.css';
@@ -97,19 +100,13 @@ function App() {
             <ProtectedRoute><AppLayout /></ProtectedRoute>
           }>
             <Route index element={<Dashboard />} />
-            <Route path="explore" element={
-              <PlaceholderPage title="Explore Destinations" emoji="🔍" description="Search and discover amazing cities and activities around the world." />
-            } />
+            <Route path="explore" element={<Explore />} />
             <Route path="my-trips" element={<MyTrips />} />
             <Route path="trips/new" element={<CreateTrip />} />
             <Route path="trips/:id/itinerary" element={<ItineraryBuilder />} />
             <Route path="trips/:id" element={<TripDetails />} />
-            <Route path="calendar" element={
-              <PlaceholderPage title="Calendar" emoji="📅" description="View your trips and activities on a calendar." />
-            } />
-            <Route path="community" element={
-              <PlaceholderPage title="Community" emoji="👥" description="Explore public itineraries from fellow travelers." />
-            } />
+            <Route path="calendar" element={<TripCalendar />} />
+            <Route path="community" element={<Community />} />
             <Route path="saved" element={
               <PlaceholderPage title="Saved Destinations" emoji="💾" description="Your bookmarked cities and activities." />
             } />

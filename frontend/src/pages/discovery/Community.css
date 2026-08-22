@@ -1,0 +1,228 @@
+/* ============================================
+   Community Page Styles
+   ============================================ */
+
+.community-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.community-header {
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+.community-layout {
+  display: flex;
+  gap: var(--space-6);
+}
+
+.community-feed {
+  flex: 1;
+  max-width: 680px;
+}
+
+/* Create Post Card */
+.create-post-card {
+  border: 1px solid var(--primary-200);
+}
+
+.create-post-input-area {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.create-post-input-area .form-input {
+  background: var(--neutral-50);
+  border: 1px solid var(--neutral-200);
+}
+
+.create-post-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: calc(40px + var(--space-3));
+}
+
+/* Post Cards */
+.posts-stream {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.post-card {
+  overflow: visible;
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.post-author-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.post-author-name {
+  font-weight: var(--weight-semibold);
+  color: var(--neutral-900);
+}
+
+.post-author-meta {
+  font-size: var(--text-xs);
+  color: var(--neutral-500);
+}
+
+.post-content {
+  color: var(--neutral-800);
+  line-height: var(--leading-relaxed);
+}
+
+/* Trip Attachment inside Post */
+.post-trip-attachment {
+  display: flex;
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+}
+
+.post-trip-attachment:hover {
+  border-color: var(--primary-300);
+}
+
+.post-trip-image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+}
+
+.post-trip-info {
+  padding: var(--space-3);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--neutral-50);
+}
+
+.post-trip-info h4 {
+  font-size: var(--text-base);
+  margin-bottom: var(--space-1);
+}
+
+.post-trip-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--neutral-500);
+}
+
+/* Post Footer Actions */
+.post-footer {
+  padding: var(--space-2) var(--space-5);
+  background: transparent;
+  gap: var(--space-2);
+}
+
+.post-action-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-full);
+  color: var(--neutral-500);
+  font-size: var(--text-sm);
+  transition: all var(--transition-fast);
+}
+
+.post-action-btn:hover {
+  background: var(--neutral-100);
+  color: var(--neutral-800);
+}
+
+.post-action-btn.liked {
+  color: var(--error);
+}
+
+.post-action-btn.liked:hover {
+  background: var(--error-bg);
+}
+
+.post-action-btn.saved {
+  color: var(--primary-600);
+}
+
+/* Sidebar */
+.community-sidebar {
+  width: 320px;
+  flex-shrink: 0;
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-6));
+  height: max-content;
+}
+
+.trending-tag-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) 0;
+  border-bottom: 1px dashed var(--neutral-200);
+}
+
+.trending-tag-item:last-child {
+  border-bottom: none;
+}
+
+.trending-tag-name {
+  font-weight: var(--weight-medium);
+  color: var(--primary-700);
+  cursor: pointer;
+}
+
+.trending-tag-name:hover {
+  text-decoration: underline;
+}
+
+.trending-tag-count {
+  font-size: var(--text-xs);
+  color: var(--neutral-500);
+}
+
+.user-suggestion {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.font-bold { font-weight: var(--weight-bold); }
+.text-sm { font-size: var(--text-sm); }
+.text-xs { font-size: var(--text-xs); }
+.text-primary-600 { color: var(--primary-600); }
+.text-neutral-500 { color: var(--neutral-500); }
+.ml-auto { margin-left: auto; }
+
+@media (max-width: 992px) {
+  .community-sidebar {
+    display: none;
+  }
+  .community-feed {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .post-trip-attachment {
+    flex-direction: column;
+  }
+  .post-trip-image {
+    width: 100%;
+    height: 140px;
+  }
+}

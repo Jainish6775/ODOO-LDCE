@@ -10,42 +10,42 @@
    CSS Custom Properties (Design Tokens)
    ============================================ */
 :root {
-  /* Primary Palette — Ocean-inspired teal/blue */
-  --primary-50: #e6fcf5;
-  --primary-100: #c3fae8;
-  --primary-200: #96f2d7;
-  --primary-300: #63e6be;
-  --primary-400: #38d9a9;
-  --primary-500: #20c997;
-  --primary-600: #12b886;
-  --primary-700: #0ca678;
-  --primary-800: #099268;
-  --primary-900: #087f5b;
+  /* Primary Palette — Monochrome Black */
+  --primary-50: #f8f9fa;
+  --primary-100: #f1f3f5;
+  --primary-200: #e9ecef;
+  --primary-300: #dee2e6;
+  --primary-400: #ced4da;
+  --primary-500: #000000;
+  --primary-600: #1a1a1a;
+  --primary-700: #333333;
+  --primary-800: #4d4d4d;
+  --primary-900: #666666;
 
-  /* Accent — Warm sunset orange */
-  --accent-50: #fff4e6;
-  --accent-100: #ffe8cc;
-  --accent-200: #ffd8a8;
-  --accent-300: #ffc078;
-  --accent-400: #ffa94d;
-  --accent-500: #ff922b;
-  --accent-600: #fd7e14;
-  --accent-700: #e8590c;
-  --accent-800: #d9480f;
-  --accent-900: #c92a2a;
+  /* Accent — Silver/Grey */
+  --accent-50: #ffffff;
+  --accent-100: #fdfdfd;
+  --accent-200: #fbfbfb;
+  --accent-300: #f4f4f4;
+  --accent-400: #ededed;
+  --accent-500: #737373;
+  --accent-600: #595959;
+  --accent-700: #404040;
+  --accent-800: #262626;
+  --accent-900: #0d0d0d;
 
   /* Neutral — Slate tones */
   --neutral-0: #ffffff;
-  --neutral-50: #f8f9fa;
-  --neutral-100: #f1f3f5;
-  --neutral-200: #e9ecef;
-  --neutral-300: #dee2e6;
-  --neutral-400: #ced4da;
-  --neutral-500: #adb5bd;
-  --neutral-600: #868e96;
-  --neutral-700: #495057;
-  --neutral-800: #343a40;
-  --neutral-900: #212529;
+  --neutral-50: #fafafa;
+  --neutral-100: #f4f4f5;
+  --neutral-200: #e4e4e7;
+  --neutral-300: #d4d4d8;
+  --neutral-400: #a1a1aa;
+  --neutral-500: #71717a;
+  --neutral-600: #52525b;
+  --neutral-700: #3f3f46;
+  --neutral-800: #27272a;
+  --neutral-900: #18181b;
 
   /* Semantic Colors */
   --success: #51cf66;
