@@ -1,109 +1,87 @@
-import { useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import React, { useState } from 'react';
+import { FiMapPin, FiCompass, FiNavigation, FiCalendar, FiDollarSign } from 'react-icons/fi';
 import './MapView.css';
 
-// Fix Leaflet default marker icons in React/Vite
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
+export default function MapView({ stops = [] }) {
+  const [activeStopIndex, setActiveStopIndex] = useState(0);
 
-// Component to dynamically re-center/fit bounds when markers change
-function MapBounds({ markers }) {
-  const map = useMap();
+  if (!stops || stops.length === 0) {
+    return (
+      <div className="map-view-container empty-map-state p-6 text-center">
+        <FiCompass size={32} className="text-neutral-400 mb-2" />
+        <h4 className="font-bold text-sm text-neutral-700">Route & Destinations Map</h4>
+        <p className="text-xs text-neutral-500 mt-1">
+          No route sections added yet. Add sections to preview the map route!
+        </p>
+      </div>
+    );
+  }
 
-  useEffect(() => {
-    if (markers && markers.length > 0) {
-      const bounds = L.latLngBounds(markers.map(m => [m.lat, m.lng]));
-      map.fitBounds(bounds, { padding: [40, 40] });
-    }
-  }, [markers, map]);
-
-  return null;
-}
-
-export default function MapView({ stops = [], center = [35.0116, 135.7681], zoom = 6 }) {
-  // Default mock coordinates for cities if lat/lng are missing
-  const cityCoordinates = {
-    'Kyoto': { lat: 35.0116, lng: 135.7681 },
-    'Tokyo': { lat: 35.6762, lng: 139.6503 },
-    'Osaka': { lat: 34.6937, lng: 135.5023 },
-    'Paris': { lat: 48.8566, lng: 2.3522 },
-    'London': { lat: 51.5074, lng: -0.1278 },
-    'Bali': { lat: -8.4095, lng: 115.1889 },
-    'Rome': { lat: 41.9028, lng: 12.4964 },
-    'New York': { lat: 40.7128, lng: -74.0060 },
-  };
-
-  const markers = stops.map((stop, index) => {
-    const cityName = stop.destination_name || stop.name || 'Kyoto';
-    const coords = cityCoordinates[cityName] || { 
-      lat: center[0] + (index * 0.1), 
-      lng: center[1] + (index * 0.1) 
-    };
-    return {
-      id: stop.id || index,
-      title: cityName,
-      notes: stop.notes || 'Destination Stop',
-      arrival: stop.arrival_date,
-      departure: stop.departure_date,
-      lat: coords.lat,
-      lng: coords.lng,
-      order: index + 1,
-    };
-  });
-
-  const polylineCoords = markers.map(m => [m.lat, m.lng]);
-
-  const mapCenter = markers.length > 0 ? [markers[0].lat, markers[0].lng] : center;
+  const selectedStop = stops[activeStopIndex] || stops[0];
 
   return (
-    <div className="map-view-wrapper">
-      <MapContainer 
-        center={mapCenter} 
-        zoom={zoom} 
-        scrollWheelZoom={false}
-        className="map-container"
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+    <div className="map-view-container">
+      
+      {/* Route Graphic Canvas Box */}
+      <div className="route-canvas-box">
+        <div className="route-canvas-header">
+          <span className="route-live-badge">📍 {stops.length} Route Legs</span>
+          <span className="route-subtitle font-bold text-xs">{selectedStop.title}</span>
+        </div>
 
-        {markers.length > 0 && <MapBounds markers={markers} />}
+        {/* SVG Route Connecting Path */}
+        <div className="route-svg-wrapper">
+          <svg className="route-svg-line" viewBox="0 0 300 80" preserveAspectRatio="none">
+            <path 
+              d="M 20 40 Q 80 15, 150 40 T 280 40" 
+              fill="none" 
+              stroke="var(--primary-500)" 
+              strokeWidth="3" 
+              strokeDasharray="6 4"
+            />
+          </svg>
 
-        {/* Route Connecting Polylines */}
-        {polylineCoords.length > 1 && (
-          <Polyline 
-            positions={polylineCoords} 
-            color="#18181b" 
-            weight={3} 
-            dashArray="6, 8" 
-          />
-        )}
+          {/* Interactive Stop Nodes */}
+          <div className="route-nodes-row">
+            {stops.map((stop, idx) => (
+              <button 
+                key={stop.id || idx}
+                className={`route-node-pin ${idx === activeStopIndex ? 'active' : ''}`}
+                onClick={() => setActiveStopIndex(idx)}
+                title={`View ${stop.title}`}
+              >
+                <span className="node-number">{idx + 1}</span>
+                <span className="node-pulse"></span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
 
-        {/* Destination Markers */}
-        {markers.map((marker) => (
-          <Marker key={marker.id} position={[marker.lat, marker.lng]}>
-            <Popup className="map-popup">
-              <div className="map-popup-content">
-                <span className="map-popup-order">Stop #{marker.order}</span>
-                <h4>{marker.title}</h4>
-                <p>{marker.notes}</p>
-                {marker.arrival && (
-                  <span className="map-popup-dates">
-                    📅 {new Date(marker.arrival).toLocaleDateString()}
+      {/* Route Stops Cards Grid */}
+      <div className="route-stops-feed mt-3">
+        {stops.map((stop, idx) => (
+          <div 
+            key={stop.id || idx}
+            className={`route-leg-card ${idx === activeStopIndex ? 'active-leg' : ''}`}
+            onClick={() => setActiveStopIndex(idx)}
+          >
+            <div className="leg-badge">Leg {idx + 1}</div>
+            <div className="leg-info">
+              <h5 className="leg-title">{stop.title || `Section ${idx + 1}`}</h5>
+              <div className="leg-meta-row mt-1">
+                <span className="leg-meta"><FiCalendar size={11} /> {stop.startDate || 'Date TBD'}</span>
+                {stop.budget > 0 && (
+                  <span className="leg-meta font-bold text-emerald-600">
+                    <FiDollarSign size={11} /> ${Number(stop.budget).toLocaleString()}
                   </span>
                 )}
               </div>
-            </Popup>
-          </Marker>
+            </div>
+          </div>
         ))}
-      </MapContainer>
+      </div>
+
     </div>
   );
 }

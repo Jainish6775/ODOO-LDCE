@@ -1,104 +1,431 @@
-/* Profile Page Styles */
-.profile-page {
+/* ============================================
+   User Profile Modern Styles - Screen 7 Schema
+   ============================================ */
+
+.profile-page-schema {
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
-  max-width: 960px;
+  max-width: 1100px;
   margin: 0 auto;
   width: 100%;
 }
 
-.profile-header-card {
+/* Top Profile Card */
+.profile-top-card {
   display: flex;
-  align-items: center;
-  gap: var(--space-6);
-  padding: var(--space-6);
+  align-items: flex-start;
+  gap: 24px;
+  padding: 28px;
   background: var(--neutral-0);
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius-2xl);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
-.profile-avatar-wrapper {
+.profile-avatar-circle {
   flex-shrink: 0;
-}
-
-.profile-avatar-img {
-  width: 80px;
-  height: 80px;
+  width: 110px;
+  height: 110px;
   border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid var(--neutral-200);
-}
-
-.profile-avatar-initials {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid var(--neutral-100);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   background: var(--neutral-900);
-  color: white;
+}
+
+.avatar-img-full {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-initials-large {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: white;
+  font-size: 32px;
+  font-weight: 800;
   font-family: var(--font-display);
-  font-size: var(--text-2xl);
-  font-weight: var(--weight-bold);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
 }
 
-.profile-name {
-  font-size: var(--text-2xl);
-  margin-bottom: 2px;
+.profile-details-content {
+  flex: 1;
 }
 
-.profile-email {
-  font-size: var(--text-sm);
+.profile-name-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.profile-display-name {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--neutral-900);
+  line-height: 1.2;
+}
+
+.profile-display-email {
+  font-size: 13px;
   color: var(--neutral-500);
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  margin-bottom: var(--space-3);
+  gap: 6px;
+  margin-top: 4px;
 }
 
-.profile-badges {
+.btn-edit-profile {
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  padding: 8px 18px;
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: 6px;
+  border: 1px solid var(--neutral-300);
 }
 
-.profile-form-card {
-  padding: var(--space-8);
-  background: var(--neutral-0);
+.profile-bio-text {
+  font-size: 14px;
+  color: var(--neutral-600);
+  line-height: 1.6;
 }
 
-.profile-section-title {
-  font-size: var(--text-xl);
-  margin-bottom: var(--space-4);
-  padding-bottom: var(--space-2);
+.profile-chip-pill {
+  background: var(--neutral-100);
+  color: var(--neutral-700);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.badge-explorer {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+  font-weight: 700;
+}
+
+/* Sections: Preplanned Trips & Previous Trips */
+.section-title-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 8px;
   border-bottom: 2px solid var(--neutral-200);
 }
 
-.profile-form-grid {
+.section-heading-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--neutral-900);
+}
+
+.section-count-badge {
+  background: var(--neutral-200);
+  color: var(--neutral-700);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+}
+
+/* 3-Column Trips Grid */
+.profile-trips-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.profile-schema-trip-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--neutral-200);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  background: var(--neutral-0);
+  transition: all 250ms ease;
+}
+
+.profile-schema-trip-card:hover {
+  border-color: var(--primary-400);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-3px);
+}
+
+.profile-trip-cover-box {
+  position: relative;
+  height: 160px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.profile-trip-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 300ms ease;
+}
+
+.profile-schema-trip-card:hover .profile-trip-cover-img {
+  transform: scale(1.05);
+}
+
+.profile-status-tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.btn-schema-view {
+  border-radius: var(--radius-lg);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+}
+
+.no-trips-placeholder {
+  background: var(--neutral-50);
+  border: 1px dashed var(--neutral-300);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--neutral-500);
+}
+
+/* Fixed Blur Backdrop Modal overlay (Screen 7 Edit Information Modal) */
+.modal-backdrop-luxury {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(15, 23, 42, 0.65) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 99999 !important;
+  padding: 20px;
+}
+
+.modal-card-luxury {
+  background: #ffffff !important;
+  border-radius: 24px !important;
+  width: 100% !important;
+  max-width: 580px !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid rgba(226, 232, 240, 0.8) !important;
+  overflow: hidden !important;
+  position: relative !important;
+  z-index: 100000 !important;
+}
+
+.modal-header-luxury {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.modal-header-icon-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close-round {
+  border: none;
+  background: #e2e8f0;
+  color: #475569;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.modal-close-round:hover {
+  background: #cbd5e1;
+  color: #0f172a;
+  transform: scale(1.08);
+}
+
+.luxury-form-row-2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-4);
+  gap: 16px;
 }
 
-.max-w-md {
-  max-width: 420px;
+.luxury-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-@media (max-width: 768px) {
-  .profile-header-card {
+.luxury-form-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.luxury-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Luxury Form Controls (Screen 7 Modal) */
+.luxury-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.luxury-field-icon {
+  position: absolute;
+  left: 14px;
+  color: #94a3b8;
+  font-size: 16px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.luxury-form-input,
+.luxury-form-select {
+  width: 100%;
+  padding: 10px 14px 10px 40px !important;
+  border-radius: 12px !important;
+  border: 1.5px solid #cbd5e1 !important;
+  background: #f8fafc !important;
+  font-size: 14px !important;
+  color: #0f172a !important;
+  font-weight: 500 !important;
+  outline: none !important;
+  transition: all 200ms ease !important;
+}
+
+.luxury-form-input:focus,
+.luxury-form-select:focus,
+.luxury-form-textarea:focus {
+  border-color: #10b981 !important;
+  background: #ffffff !important;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15) !important;
+}
+
+.luxury-form-textarea {
+  width: 100%;
+  padding: 12px 14px !important;
+  border-radius: 12px !important;
+  border: 1.5px solid #cbd5e1 !important;
+  background: #f8fafc !important;
+  font-size: 14px !important;
+  color: #0f172a !important;
+  font-weight: 500 !important;
+  outline: none !important;
+  resize: vertical;
+  transition: all 200ms ease !important;
+}
+
+.btn-luxury-cancel {
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #475569;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.btn-luxury-cancel:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.btn-luxury-submit {
+  border: none;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 10px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+  transition: all 200ms ease;
+}
+
+.btn-luxury-submit:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+@media (max-width: 992px) {
+  .profile-trips-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .profile-top-card {
     flex-direction: column;
+    align-items: center;
     text-align: center;
   }
-
-  .profile-email {
-    justify-content: center;
+  
+  .profile-name-row {
+    flex-direction: column;
+    align-items: center;
   }
 
-  .profile-badges {
-    justify-content: center;
+  .profile-trips-grid-3 {
+    grid-template-columns: 1fr;
   }
 
-  .profile-form-grid {
+  .luxury-form-row-2 {
     grid-template-columns: 1fr;
   }
 }

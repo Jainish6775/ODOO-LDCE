@@ -4,7 +4,7 @@ const communityController = {
   async getPublicTrips(req, res, next) {
     try {
       const { search } = req.query;
-      
+
       let query = `
         SELECT t.*, u.username as creator_name,
         (SELECT COUNT(*) FROM likes WHERE trip_id = t.id) as likes_count
@@ -35,7 +35,7 @@ const communityController = {
 
       // Check if already liked
       const checkRes = await db.query('SELECT * FROM likes WHERE user_id = $1 AND trip_id = $2', [userId, tripId]);
-      
+
       if (checkRes.rows.length > 0) {
         // Unlike
         await db.query('DELETE FROM likes WHERE user_id = $1 AND trip_id = $2', [userId, tripId]);
@@ -58,7 +58,7 @@ const communityController = {
       // Simplistic copy: Just duplicate the trip record for MVP.
       const tripRes = await db.query('SELECT * FROM trips WHERE id = $1 AND visibility = $2', [tripId, 'public']);
       if (tripRes.rows.length === 0) return res.status(404).json({ error: 'Public trip not found' });
-      
+
       const tripToCopy = tripRes.rows[0];
 
       const { rows } = await db.query(

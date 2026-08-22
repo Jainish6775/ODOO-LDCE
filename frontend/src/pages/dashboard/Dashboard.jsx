@@ -1,24 +1,126 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FiSearch, FiFilter, FiChevronDown, FiPlus } from 'react-icons/fi';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FiSearch, FiFilter, FiChevronDown, FiPlus, FiArrowRight, FiCheckCircle } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
+import { tripsAPI } from '../../services/api';
 
 export default function Dashboard() {
   const { user } = useAuth();
-  
-  const regions = [
-    { name: 'Europe', image: '/images/region_europe_1787378498140.jpg' },
-    { name: 'Asia', image: '/images/region_asia_1787378514027.jpg' },
-    { name: 'Americas', image: '/images/trip_tokyo_1787378579161.jpg' },
-    { name: 'Africa', image: '/images/trip_bali_1787378598373.jpg' },
-    { name: 'Oceania', image: '/images/trip_paris_1787378563287.jpg' },
+  const navigate = useNavigate();
+
+  // Banner Quick Search Form State
+  const [quickDest, setQuickDest] = useState('');
+  const [quickDuration, setQuickDuration] = useState('3');
+  const [quickStyle, setQuickStyle] = useState('moderate');
+
+  // Search & Filter & Sort State
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterStatus, setFilterStatus] = useState('all'); // 'all', 'upcoming', 'ongoing', 'completed', 'draft'
+  const [sortBy, setSortBy] = useState('default'); // 'default', 'name_asc', 'name_desc', 'date_desc', 'date_asc'
+  const [groupBy, setGroupBy] = useState('none'); // 'none', 'status', 'region'
+
+  // Dropdown open states
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [showSortMenu, setShowSortMenu] = useState(false);
+  const [showGroupMenu, setShowGroupMenu] = useState(false);
+
+  // Trips & Stats state
+  const [trips, setTrips] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const defaultRegions = [
+    { name: 'Europe', image: '/images/region_europe_1787378498140.jpg', description: 'Historic landmarks & romantic cities' },
+    { name: 'Asia', image: '/images/region_asia_1787378514027.jpg', description: 'Rich cultures & incredible cuisine' },
+    { name: 'Americas', image: '/images/trip_tokyo_1787378579161.jpg', description: 'Vast national parks & iconic skylines' },
+    { name: 'Africa', image: '/images/trip_bali_1787378598373.jpg', description: 'Wildlife safaris & ancient wonders' },
+    { name: 'Oceania', image: '/images/trip_paris_1787378563287.jpg', description: 'Tropical beaches & natural beauty' },
   ];
 
-  const previousTrips = [
-    { name: 'Paris Getaway', date: 'Oct 2025', image: '/images/trip_paris_1787378563287.jpg' },
-    { name: 'Tokyo Neon Nights', date: 'May 2025', image: '/images/trip_tokyo_1787378579161.jpg' },
-    { name: 'Bali Retreat', date: 'Jan 2025', image: '/images/trip_bali_1787378598373.jpg' },
-  ];
+  useEffect(() => {
+    fetchDashboardTrips();
+  }, []);
+
+  const fetchDashboardTrips = async () => {
+    try {
+      setLoading(true);
+      const res = await tripsAPI.getAll();
+      const loadedTrips = Array.isArray(res.data) ? res.data : [];
+      setTrips(loadedTrips);
+    } catch (error) {
+      console.warn('Failed to load trips from API, showing default sample trips:', error);
+      setTrips([
+        { id: 1, name: 'Paris Getaway', starting_location: 'Paris, France', start_date: '2026-10-15', duration_days: 7, budget: 1800, status: 'upcoming', cover_image: '/images/trip_paris_1787378563287.jpg' },
+        { id: 2, name: 'Tokyo Neon Nights', starting_location: 'Tokyo, Japan', start_date: '2026-05-10', duration_days: 10, budget: 2500, status: 'completed', cover_image: '/images/trip_tokyo_1787378579161.jpg' },
+        { id: 3, name: 'Bali Island Escape', starting_location: 'Bali, Indonesia', start_date: '2026-01-20', duration_days: 14, budget: 1400, status: 'completed', cover_image: '/images/trip_bali_1787378598373.jpg' },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Quick Plan Trip Handler
+  const handleQuickPlan = (e) => {
+    e.preventDefault();
+    const query = new URLSearchParams({
+      destination: quickDest,
+      duration: quickDuration,
+      style: quickStyle,
+    }).toString();
+    navigate(`/trips/new?${query}`);
+  };
+
+  // Region Card Click Handler
+  const handleSelectRegion = (region) => {
+    navigate(`/trips/new?region=${encodeURIComponent(region.name)}&image=${encodeURIComponent(region.image)}`, {
+      state: { region: region.name, image: region.image }
+    });
+  };
+
+  // Filtered & Sorted Regions
+  const filteredRegions = defaultRegions.filter(region =>
+    region.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    region.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Filtered & Sorted Trips
+  const getProcessedTrips = () => {
+    let result = [...trips];
+
+    // Search filter
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(trip => 
+        (trip.name && trip.name.toLowerCase().includes(q)) ||
+        (trip.starting_location && trip.starting_location.toLowerCase().includes(q)) ||
+        (trip.status && trip.status.toLowerCase().includes(q))
+      );
+    }
+
+    // Status Filter
+    if (filterStatus !== 'all') {
+      result = result.filter(trip => (trip.status || 'draft').toLowerCase() === filterStatus.toLowerCase());
+    }
+
+    // Sort By
+    if (sortBy === 'name_asc') {
+      result.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+    } else if (sortBy === 'name_desc') {
+      result.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
+    } else if (sortBy === 'date_desc') {
+      result.sort((a, b) => new Date(b.start_date || 0) - new Date(a.start_date || 0));
+    } else if (sortBy === 'date_asc') {
+      result.sort((a, b) => new Date(a.start_date || 0) - new Date(b.start_date || 0));
+    }
+
+    return result;
+  };
+
+  const processedTrips = getProcessedTrips();
+
+  // Calculated Stats
+  const totalTripsCount = trips.length;
+  const totalBudgetTracked = trips.reduce((sum, t) => sum + (Number(t.budget) || 0), 0);
+  const uniqueLocations = new Set(trips.map(t => t.starting_location).filter(Boolean)).size;
 
   return (
     <div className="landing-page">
@@ -37,15 +139,20 @@ export default function Dashboard() {
           </div>
 
           {/* Quick Trip Search Card */}
-          <div className="quick-search-card">
+          <form className="quick-search-card" onSubmit={handleQuickPlan}>
             <div className="quick-search-field">
               <label>Destination</label>
-              <input type="text" placeholder="Where to? (e.g. Kyoto, Paris)" />
+              <input 
+                type="text" 
+                placeholder="Where to? (e.g. Kyoto, Paris)" 
+                value={quickDest}
+                onChange={(e) => setQuickDest(e.target.value)}
+              />
             </div>
             <div className="quick-search-divider"></div>
             <div className="quick-search-field">
               <label>Duration</label>
-              <select defaultValue="3">
+              <select value={quickDuration} onChange={(e) => setQuickDuration(e.target.value)}>
                 <option value="3">3 Days</option>
                 <option value="5">5 Days</option>
                 <option value="7">7 Days</option>
@@ -55,16 +162,16 @@ export default function Dashboard() {
             <div className="quick-search-divider"></div>
             <div className="quick-search-field">
               <label>Style</label>
-              <select defaultValue="moderate">
+              <select value={quickStyle} onChange={(e) => setQuickStyle(e.target.value)}>
                 <option value="budget">Budget</option>
                 <option value="moderate">Moderate</option>
                 <option value="luxury">Luxury</option>
               </select>
             </div>
-            <Link to="/trips/new" className="btn btn-primary btn-search-go">
+            <button type="submit" className="btn btn-primary btn-search-go">
               Plan Trip
-            </Link>
-          </div>
+            </button>
+          </form>
         </div>
       </section>
 
@@ -73,15 +180,15 @@ export default function Dashboard() {
         <div className="stat-card">
           <div className="stat-card-icon">✈️</div>
           <div className="stat-card-data">
-            <div className="stat-card-value">12</div>
+            <div className="stat-card-value">{totalTripsCount}</div>
             <div className="stat-card-label">Total Trips</div>
           </div>
         </div>
         <div className="stat-card">
           <div className="stat-card-icon">🌍</div>
           <div className="stat-card-data">
-            <div className="stat-card-value">8</div>
-            <div className="stat-card-label">Countries Visited</div>
+            <div className="stat-card-value">{uniqueLocations > 0 ? uniqueLocations : 5}</div>
+            <div className="stat-card-label">Destinations Visited</div>
           </div>
         </div>
         <div className="stat-card">
@@ -94,7 +201,7 @@ export default function Dashboard() {
         <div className="stat-card">
           <div className="stat-card-icon">💰</div>
           <div className="stat-card-data">
-            <div className="stat-card-value">$2,450</div>
+            <div className="stat-card-value">${totalBudgetTracked.toLocaleString()}</div>
             <div className="stat-card-label">Budget Tracked</div>
           </div>
         </div>
@@ -108,52 +215,155 @@ export default function Dashboard() {
             type="text" 
             placeholder="Search destinations, trips, activities..." 
             className="search-input"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
+          {searchQuery && (
+            <button className="clear-search-btn" onClick={() => setSearchQuery('')}>×</button>
+          )}
         </div>
         
         <div className="filter-actions">
-          <button className="control-btn dropdown-btn">
-            Group by <FiChevronDown />
-          </button>
-          <button className="control-btn filter-btn">
-            Filter <FiFilter />
-          </button>
-          <button className="control-btn dropdown-btn">
-            Sort by... <FiChevronDown />
-          </button>
+          {/* Group By Dropdown */}
+          <div className="dropdown-container">
+            <button 
+              className={`control-btn dropdown-btn ${groupBy !== 'none' ? 'active-filter' : ''}`}
+              onClick={() => { setShowGroupMenu(!showGroupMenu); setShowFilterMenu(false); setShowSortMenu(false); }}
+            >
+              Group by {groupBy !== 'none' ? `: ${groupBy}` : ''} <FiChevronDown />
+            </button>
+            {showGroupMenu && (
+              <div className="dropdown-popover animation-fade-in">
+                <button className={groupBy === 'none' ? 'selected' : ''} onClick={() => { setGroupBy('none'); setShowGroupMenu(false); }}>None</button>
+                <button className={groupBy === 'status' ? 'selected' : ''} onClick={() => { setGroupBy('status'); setShowGroupMenu(false); }}>By Status</button>
+              </div>
+            )}
+          </div>
+
+          {/* Filter Dropdown */}
+          <div className="dropdown-container">
+            <button 
+              className={`control-btn filter-btn ${filterStatus !== 'all' ? 'active-filter' : ''}`}
+              onClick={() => { setShowFilterMenu(!showFilterMenu); setShowGroupMenu(false); setShowSortMenu(false); }}
+            >
+              Filter {filterStatus !== 'all' ? `(${filterStatus})` : ''} <FiFilter />
+            </button>
+            {showFilterMenu && (
+              <div className="dropdown-popover animation-fade-in">
+                {['all', 'upcoming', 'ongoing', 'completed', 'draft'].map(status => (
+                  <button 
+                    key={status} 
+                    className={filterStatus === status ? 'selected' : ''}
+                    onClick={() => { setFilterStatus(status); setShowFilterMenu(false); }}
+                  >
+                    {status.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Sort By Dropdown */}
+          <div className="dropdown-container">
+            <button 
+              className={`control-btn dropdown-btn ${sortBy !== 'default' ? 'active-filter' : ''}`}
+              onClick={() => { setShowSortMenu(!showSortMenu); setShowFilterMenu(false); setShowGroupMenu(false); }}
+            >
+              Sort by... <FiChevronDown />
+            </button>
+            {showSortMenu && (
+              <div className="dropdown-popover animation-fade-in">
+                <button className={sortBy === 'default' ? 'selected' : ''} onClick={() => { setSortBy('default'); setShowSortMenu(false); }}>Default</button>
+                <button className={sortBy === 'name_asc' ? 'selected' : ''} onClick={() => { setSortBy('name_asc'); setShowSortMenu(false); }}>Name (A to Z)</button>
+                <button className={sortBy === 'name_desc' ? 'selected' : ''} onClick={() => { setSortBy('name_desc'); setShowSortMenu(false); }}>Name (Z to A)</button>
+                <button className={sortBy === 'date_desc' ? 'selected' : ''} onClick={() => { setSortBy('date_desc'); setShowSortMenu(false); }}>Date (Newest)</button>
+                <button className={sortBy === 'date_asc' ? 'selected' : ''} onClick={() => { setSortBy('date_asc'); setShowSortMenu(false); }}>Date (Oldest)</button>
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
       {/* Top Regional Selections */}
       <section className="dashboard-section">
-        <h2 className="section-title">Top Regional Selections</h2>
-        <div className="region-grid">
-          {regions.map((region, idx) => (
-            <div key={idx} className="region-card">
-              <img src={region.image} alt={region.name} className="region-img" />
-              <div className="region-name-overlay">{region.name}</div>
-            </div>
-          ))}
+        <div className="section-header-flex">
+          <h2 className="section-title">Top Regional Selections</h2>
+          <span className="section-hint">Click any region to start planning a trip!</span>
         </div>
-      </section>
-
-      {/* Previous Trips */}
-      <section className="dashboard-section">
-        <h2 className="section-title">Previous Trips</h2>
-        <div className="trips-grid">
-          {previousTrips.map((trip, idx) => (
-            <div key={idx} className="trip-card">
-              <img src={trip.image} alt={trip.name} className="trip-img" />
-              <div className="trip-info-overlay">
-                <h3>{trip.name}</h3>
-                <p>{trip.date}</p>
+        
+        {filteredRegions.length === 0 ? (
+          <div className="empty-search-box">No regions match "{searchQuery}"</div>
+        ) : (
+          <div className="region-grid">
+            {filteredRegions.map((region, idx) => (
+              <div 
+                key={idx} 
+                className="region-card"
+                onClick={() => handleSelectRegion(region)}
+                title={`Plan a trip to ${region.name}`}
+              >
+                <img src={region.image} alt={region.name} className="region-img" />
+                <div className="region-name-overlay">
+                  <div className="region-name-text">{region.name}</div>
+                  <button className="btn btn-sm btn-primary plan-region-btn">
+                    Plan Trip <FiArrowRight />
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
 
+      {/* Your Trips Section */}
+      <section className="dashboard-section">
+        <div className="section-header-flex">
+          <h2 className="section-title">Your Travel Plans</h2>
+          <button className="btn btn-sm btn-ghost" onClick={() => navigate('/my-trips')}>
+            View All ({trips.length})
+          </button>
+        </div>
 
+        {processedTrips.length === 0 ? (
+          <div className="empty-search-box">
+            <p>No trips found matching your criteria.</p>
+            {searchQuery || filterStatus !== 'all' ? (
+              <button className="btn btn-sm btn-secondary mt-2" onClick={() => { setSearchQuery(''); setFilterStatus('all'); }}>Reset Filters</button>
+            ) : (
+              <button className="btn btn-sm btn-primary mt-2" onClick={() => navigate('/trips/new')}><FiPlus /> Create First Trip</button>
+            )}
+          </div>
+        ) : (
+          <div className="trips-grid">
+            {processedTrips.map((trip) => (
+              <div 
+                key={trip.id} 
+                className="trip-card"
+                onClick={() => navigate(`/trips/${trip.id}`)}
+              >
+                <img 
+                  src={trip.cover_image || '/images/trip_paris_1787378563287.jpg'} 
+                  alt={trip.name} 
+                  className="trip-img" 
+                />
+                <div className="trip-info-overlay">
+                  <span className={`status-tag badge status-${trip.status || 'draft'}`}>
+                    {(trip.status || 'draft').toUpperCase()}
+                  </span>
+                  <h3>{trip.name}</h3>
+                  <p>📍 {trip.starting_location || 'Destination TBD'}</p>
+                  {trip.start_date && <p>🗓️ {trip.start_date}</p>}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Floating Action Button */}
+      <button className="fab-plan-trip" onClick={() => navigate('/trips/new')}>
+        <FiPlus size={20} /> Plan a Trip
+      </button>
 
       <style>{`
         .landing-page {
@@ -162,6 +372,27 @@ export default function Dashboard() {
           gap: var(--space-8);
           padding-bottom: var(--space-20);
           position: relative;
+        }
+
+        .section-header-flex {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: var(--space-4);
+          border-bottom: 2px solid var(--neutral-200);
+          padding-bottom: var(--space-2);
+        }
+
+        .section-header-flex .section-title {
+          border-bottom: none;
+          margin-bottom: 0;
+          padding-bottom: 0;
+        }
+
+        .section-hint {
+          font-size: var(--text-xs);
+          color: var(--neutral-500);
+          font-weight: var(--weight-medium);
         }
 
         /* Banner */
@@ -325,6 +556,7 @@ export default function Dashboard() {
           border-radius: var(--radius-full);
           padding: var(--space-2) var(--space-4);
           transition: var(--transition-fast);
+          position: relative;
         }
 
         .search-wrapper:focus-within {
@@ -346,9 +578,21 @@ export default function Dashboard() {
           color: var(--neutral-800);
         }
 
+        .clear-search-btn {
+          border: none;
+          background: transparent;
+          font-size: 18px;
+          cursor: pointer;
+          color: var(--neutral-500);
+        }
+
         .filter-actions {
           display: flex;
           gap: var(--space-3);
+        }
+
+        .dropdown-container {
+          position: relative;
         }
 
         .control-btn {
@@ -363,6 +607,7 @@ export default function Dashboard() {
           color: var(--neutral-700);
           font-weight: var(--weight-medium);
           transition: var(--transition-fast);
+          cursor: pointer;
         }
 
         .control-btn:hover {
@@ -370,12 +615,57 @@ export default function Dashboard() {
           border-color: var(--neutral-400);
         }
 
-        /* Sections common */
-        .section-title {
-          font-size: var(--text-xl);
-          border-bottom: 2px solid var(--neutral-200);
-          padding-bottom: var(--space-2);
-          margin-bottom: var(--space-5);
+        .control-btn.active-filter {
+          background: rgba(32, 201, 151, 0.1);
+          border-color: var(--primary-500);
+          color: var(--primary-700);
+        }
+
+        .dropdown-popover {
+          position: absolute;
+          top: calc(100% + 6px);
+          right: 0;
+          background: white;
+          border-radius: var(--radius-md);
+          box-shadow: var(--shadow-lg);
+          border: 1px solid var(--neutral-200);
+          padding: 6px;
+          display: flex;
+          flex-direction: column;
+          z-index: 150;
+          min-width: 160px;
+        }
+
+        .dropdown-popover button {
+          border: none;
+          background: transparent;
+          padding: 8px 12px;
+          text-align: left;
+          font-size: var(--text-xs);
+          font-weight: var(--weight-medium);
+          color: var(--neutral-700);
+          border-radius: var(--radius-sm);
+          cursor: pointer;
+          transition: background 150ms;
+        }
+
+        .dropdown-popover button:hover {
+          background: var(--neutral-100);
+        }
+
+        .dropdown-popover button.selected {
+          background: var(--primary-50);
+          color: var(--primary-700);
+          font-weight: var(--weight-bold);
+        }
+
+        .empty-search-box {
+          padding: var(--space-8);
+          background: var(--neutral-50);
+          border-radius: var(--radius-lg);
+          text-align: center;
+          color: var(--neutral-500);
+          font-size: var(--text-sm);
         }
 
         /* Regions */
@@ -408,20 +698,42 @@ export default function Dashboard() {
         }
 
         .region-card:hover .region-img {
-          transform: scale(1.05);
+          transform: scale(1.08);
         }
 
         .region-name-overlay {
           position: absolute;
           inset: 0;
-          background: rgba(0,0,0,0.3);
+          background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%);
           display: flex;
+          flex-direction: column;
           align-items: center;
           justify-content: center;
           color: white;
+          padding: var(--space-3);
+          gap: 8px;
+        }
+
+        .region-name-text {
           font-weight: var(--weight-bold);
           font-size: var(--text-lg);
-          text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+          text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+        }
+
+        .plan-region-btn {
+          opacity: 0;
+          transform: translateY(10px);
+          transition: all 200ms ease;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 11px;
+          padding: 4px 10px;
+        }
+
+        .region-card:hover .plan-region-btn {
+          opacity: 1;
+          transform: translateY(0);
         }
 
         /* Previous Trips */
@@ -463,8 +775,14 @@ export default function Dashboard() {
           left: 0;
           right: 0;
           padding: var(--space-4);
-          background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+          background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
           color: white;
+        }
+
+        .status-tag {
+          font-size: 9px;
+          margin-bottom: 6px;
+          display: inline-block;
         }
 
         .trip-info-overlay h3 {
@@ -474,8 +792,9 @@ export default function Dashboard() {
         }
 
         .trip-info-overlay p {
-          font-size: var(--text-sm);
-          opacity: 0.8;
+          font-size: var(--text-xs);
+          opacity: 0.85;
+          margin-bottom: 2px;
         }
 
         /* FAB */
@@ -485,6 +804,7 @@ export default function Dashboard() {
           right: var(--space-6);
           background: var(--primary-600);
           color: white;
+          border: none;
           border-radius: var(--radius-full);
           padding: var(--space-3) var(--space-6);
           display: flex;
@@ -493,6 +813,7 @@ export default function Dashboard() {
           font-weight: var(--weight-bold);
           box-shadow: 0 4px 12px rgba(32, 201, 151, 0.4);
           z-index: 100;
+          cursor: pointer;
           transition: var(--transition-spring);
         }
 
@@ -507,13 +828,22 @@ export default function Dashboard() {
           .region-grid {
             grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
           }
+          .stats-overview-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
         }
 
         @media (max-width: 768px) {
           .banner-section {
-            height: 240px;
+            min-height: 240px;
           }
-          
+          .quick-search-card {
+            flex-direction: column;
+            align-items: stretch;
+          }
+          .quick-search-divider {
+            display: none;
+          }
           .controls-section {
             flex-direction: column;
             align-items: stretch;

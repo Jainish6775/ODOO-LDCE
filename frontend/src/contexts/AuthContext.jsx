@@ -58,7 +58,8 @@ export function AuthProvider({ children }) {
   };
 
   const updateUser = (updatedUser) => {
-    setUser(updatedUser);
+    if (!updatedUser) return;
+    setUser((prev) => ({ ...(prev || {}), ...updatedUser }));
   };
 
   const value = {
