@@ -180,7 +180,7 @@ export default function TripDetails() {
   }
 
   return (
-    <div className="trip-details-container print-area">
+    <div className="trip-details-container print-area page-content-padding">
       
       {/* Hero Header Banner */}
       <div className="trip-hero" style={{ backgroundImage: `url(${trip?.cover_image || '/images/trip_paris_1787378563287.jpg'})` }}>

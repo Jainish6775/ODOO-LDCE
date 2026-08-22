@@ -755,3 +755,88 @@
 }
 
 .show-mobile { display: none; }
+
+/* ============================================
+   Missing Component Styles (Polish)
+   ============================================ */
+
+/* Form Grid Layout - CreateTrip */
+.form-grid-schema {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+}
+
+@media (max-width: 768px) {
+  .form-grid-schema {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card Header */
+.card-header {
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--neutral-100);
+}
+
+/* Additional Details Accordion */
+.additional-details-accordion {
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-top: var(--space-4);
+}
+
+.additional-details-accordion summary {
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--neutral-600);
+  background: var(--neutral-50);
+  border-bottom: 1px solid var(--neutral-200);
+  list-style: none;
+  transition: background 200ms ease, color 200ms ease;
+}
+
+.additional-details-accordion summary:hover {
+  background: var(--neutral-100);
+  color: var(--primary-600);
+}
+
+.additional-details-accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Cursor utility */
+.cursor-pointer { cursor: pointer; }
+
+/* Hover text color utility */
+.hover\:text-primary-600:hover { color: var(--primary-600); }
+
+/* Animation classes */
+.animation-fade-in {
+  animation: fadeIn 200ms ease forwards;
+}
+
+/* Section hint badge */
+.section-hint {
+  font-size: var(--text-xs);
+  color: var(--neutral-400);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Badge secondary */
+.badge-secondary {
+  background: var(--neutral-100);
+  color: var(--neutral-700);
+  border: 1px solid var(--neutral-300);
+}
+
+/* Text capitalize utility */
+.text-capitalize {
+  text-transform: capitalize;
+}
+

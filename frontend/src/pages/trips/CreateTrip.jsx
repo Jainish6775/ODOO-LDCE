@@ -159,7 +159,7 @@ export default function CreateTrip() {
   };
 
   return (
-    <div className="create-trip-container">
+    <div className="create-trip-container page-content-padding">
       
       {/* Top Header Controls */}
       <div className="create-trip-header">
