@@ -1,0 +1,149 @@
+/* ============================================
+   Trip Details Styles
+   ============================================ */
+
+.trip-details-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.trip-hero {
+  height: 300px;
+  border-radius: var(--radius-xl);
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.trip-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 100%);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.trip-hero-content {
+  color: white;
+}
+
+.trip-hero-title {
+  font-size: var(--text-4xl);
+  color: white;
+  margin-bottom: var(--space-2);
+}
+
+.trip-hero-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.trip-hero-meta span {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.hover-bg-white-20:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Controls */
+.trip-controls-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--neutral-200);
+  padding-bottom: var(--space-2);
+}
+
+.trip-actions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+/* Budget Dashboard */
+.budget-dashboard {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-6);
+}
+
+.budget-big-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.budget-big-stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.budget-big-stat .stat-label {
+  font-size: var(--text-sm);
+  color: var(--neutral-500);
+  font-weight: var(--weight-medium);
+}
+
+.budget-big-stat .stat-value {
+  font-size: var(--text-3xl);
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  color: var(--neutral-900);
+}
+
+/* Category Breakdown */
+.category-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--text-sm);
+}
+
+@media (max-width: 992px) {
+  .budget-dashboard {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .trip-hero {
+    height: 250px;
+  }
+  
+  .trip-hero-title {
+    font-size: var(--text-3xl);
+  }
+  
+  .trip-hero-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+  
+  .trip-controls-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-4);
+  }
+  
+  .budget-big-stats {
+    grid-template-columns: 1fr;
+  }
+}
