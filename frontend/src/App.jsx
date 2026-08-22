@@ -5,6 +5,10 @@ import AppLayout from './components/layout/AppLayout';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import Dashboard from './pages/dashboard/Dashboard';
+import MyTrips from './pages/trips/MyTrips';
+import CreateTrip from './pages/trips/CreateTrip';
+import ItineraryBuilder from './pages/trips/ItineraryBuilder';
+import TripDetails from './pages/trips/TripDetails';
 import NotFound from './pages/errors/NotFound';
 import './index.css';
 import './styles/components.css';
@@ -96,18 +100,10 @@ function App() {
             <Route path="explore" element={
               <PlaceholderPage title="Explore Destinations" emoji="🔍" description="Search and discover amazing cities and activities around the world." />
             } />
-            <Route path="my-trips" element={
-              <PlaceholderPage title="My Trips" emoji="🧳" description="View and manage all your travel plans in one place." />
-            } />
-            <Route path="trips/new" element={
-              <PlaceholderPage title="Create a Trip" emoji="✈️" description="Start planning your next adventure." />
-            } />
-            <Route path="trips/:id/itinerary" element={
-              <PlaceholderPage title="Build Itinerary" emoji="📋" description="Organize your day-by-day travel plan." />
-            } />
-            <Route path="trips/:id" element={
-              <PlaceholderPage title="Trip Details" emoji="🗺️" description="View your complete itinerary and budget." />
-            } />
+            <Route path="my-trips" element={<MyTrips />} />
+            <Route path="trips/new" element={<CreateTrip />} />
+            <Route path="trips/:id/itinerary" element={<ItineraryBuilder />} />
+            <Route path="trips/:id" element={<TripDetails />} />
             <Route path="calendar" element={
               <PlaceholderPage title="Calendar" emoji="📅" description="View your trips and activities on a calendar." />
             } />
