@@ -1,94 +1,89 @@
-import { useState } from 'react';
-import { FiHeart, FiMessageCircle, FiShare2, FiBookmark, FiMoreHorizontal, FiSend, FiMapPin, FiCalendar } from 'react-icons/fi';
+import { useState, useEffect } from 'react';
+import { FiHeart, FiMessageCircle, FiShare2, FiBookmark, FiMoreHorizontal, FiSend, FiMapPin, FiCalendar, FiCopy } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { communityAPI } from '../../services/api';
 import './Community.css';
 
 export default function Community() {
-  const [activeTab, setActiveTab] = useState('For You');
-  
-  // Mock data for community posts
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      author: {
-        name: 'Sarah Jenkins',
-        handle: '@sarahj_travels',
-        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-      },
-      timeAgo: '2 hours ago',
-      content: 'Just finished an amazing 14-day trip across Japan! The cherry blossoms in Kyoto were absolutely breathtaking. I highly recommend taking the bullet train down to Osaka for the street food.',
-      tripDetails: {
-        title: 'Spring in Japan',
-        destinations: 'Tokyo, Kyoto, Osaka',
-        duration: '14 Days',
-        image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
-      },
-      likes: 342,
-      comments: 28,
-      liked: true,
-      saved: false
-    },
-    {
-      id: 2,
-      author: {
-        name: 'Marcus Chen',
-        handle: '@marcus_wanders',
-        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-      },
-      timeAgo: '5 hours ago',
-      content: 'Anyone have recommendations for budget accommodations in Rome? Planning a backpacking trip for this summer!',
-      tripDetails: null,
-      likes: 12,
-      comments: 45,
-      liked: false,
-      saved: false
-    },
-    {
-      id: 3,
-      author: {
-        name: 'Elena Rodriguez',
-        handle: '@elena_explores',
-        avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-      },
-      timeAgo: '1 day ago',
-      content: 'My ultimate guide to the Swiss Alps is finally live! We managed to stay under $100/day by cooking our own meals and taking advantage of the local hiking passes.',
-      tripDetails: {
-        title: 'Swiss Alps on a Budget',
-        destinations: 'Interlaken, Zermatt',
-        duration: '7 Days',
-        image: 'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
-      },
-      likes: 890,
-      comments: 156,
-      liked: false,
-      saved: true
+  const [activeTab, setActiveTab] = useState('Trending');
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchCommunityTrips();
+  }, []);
+
+  const fetchCommunityTrips = async () => {
+    try {
+      setLoading(true);
+      const res = await communityAPI.getPublicTrips();
+      // Map trips to post structure
+      const fetchedPosts = res.data.map(trip => ({
+        id: trip.id,
+        author: {
+          name: trip.creator_name || 'Anonymous Explorer',
+          handle: '@' + (trip.creator_name || 'explorer').toLowerCase().replace(' ', '_'),
+          avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+        },
+        timeAgo: new Date(trip.created_at).toLocaleDateString(),
+        content: trip.description || 'Check out my amazing trip itinerary!',
+        tripDetails: {
+          id: trip.id,
+          title: trip.name,
+          destinations: trip.starting_location,
+          duration: `${trip.duration_days || 1} Days`,
+          image: trip.cover_image || 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+        },
+        likes: Number(trip.likes_count) || 0,
+        comments: 0,
+        liked: false, // We'd ideally check this from backend if user liked it
+        saved: false
+      }));
+      setPosts(fetchedPosts);
+    } catch (error) {
+      toast.error('Failed to load community feed');
+    } finally {
+      setLoading(false);
     }
-  ]);
+  };
 
   const trendingTags = ['#Japan2026', '#BudgetTravel', '#SoloTravel', '#EuroSummer', '#Hiking', '#DigitalNomad'];
 
-  const toggleLike = (id) => {
-    setPosts(posts.map(post => {
-      if (post.id === id) {
-        return { 
-          ...post, 
-          liked: !post.liked,
-          likes: post.liked ? post.likes - 1 : post.likes + 1 
-        };
-      }
-      return post;
-    }));
+  const toggleLike = async (id) => {
+    try {
+      const res = await communityAPI.likeTrip(id);
+      const isLiked = res.data.liked;
+      
+      setPosts(posts.map(post => {
+        if (post.id === id) {
+          return { 
+            ...post, 
+            liked: isLiked,
+            likes: isLiked ? post.likes + 1 : Math.max(0, post.likes - 1)
+          };
+        }
+        return post;
+      }));
+    } catch (error) {
+      toast.error('Could not like trip');
+    }
   };
 
-  const toggleSave = (id) => {
-    setPosts(posts.map(post => {
-      if (post.id === id) {
-        if (!post.saved) toast.success('Saved to your bookmarks!');
-        return { ...post, saved: !post.saved };
-      }
-      return post;
-    }));
+  const copyTrip = async (id) => {
+    try {
+      const res = await communityAPI.copyTrip(id);
+      toast.success('Trip copied to your dashboard!');
+      navigate(`/trips/${res.data.id}`);
+    } catch (error) {
+      toast.error('Failed to copy trip');
+    }
   };
+
+  if (loading) {
+    return <div className="loading-spinner-container"><div className="spinner"></div></div>;
+  }
 
   return (
     <div className="community-container">
@@ -137,73 +132,77 @@ export default function Community() {
 
           {/* Posts Stream */}
           <div className="posts-stream">
-            {posts.map(post => (
-              <div key={post.id} className="card post-card">
-                <div className="card-body">
-                  
-                  {/* Post Header */}
-                  <div className="post-header">
-                    <div className="post-author-info">
-                      <img src={post.author.avatar} alt={post.author.name} className="avatar" />
-                      <div>
-                        <div className="post-author-name">{post.author.name}</div>
-                        <div className="post-author-meta">
-                          <span>{post.author.handle}</span> • <span>{post.timeAgo}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <button className="btn-icon btn-sm text-neutral-400"><FiMoreHorizontal /></button>
-                  </div>
-                  
-                  {/* Post Content */}
-                  <div className="post-content mt-4">
-                    <p>{post.content}</p>
-                  </div>
-
-                  {/* Attached Trip Card (if any) */}
-                  {post.tripDetails && (
-                    <div className="post-trip-attachment mt-4">
-                      <img src={post.tripDetails.image} alt={post.tripDetails.title} className="post-trip-image" />
-                      <div className="post-trip-info">
-                        <h4>{post.tripDetails.title}</h4>
-                        <div className="post-trip-meta">
-                          <span><FiMapPin /> {post.tripDetails.destinations}</span>
-                          <span><FiCalendar /> {post.tripDetails.duration}</span>
-                        </div>
-                        <button className="btn btn-secondary btn-sm mt-2">View Itinerary</button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Post Footer/Actions */}
-                <div className="card-footer post-footer">
-                  <button 
-                    className={`post-action-btn ${post.liked ? 'liked' : ''}`}
-                    onClick={() => toggleLike(post.id)}
-                  >
-                    <FiHeart fill={post.liked ? 'currentColor' : 'none'} />
-                    <span>{post.likes}</span>
-                  </button>
-                  <button className="post-action-btn">
-                    <FiMessageCircle />
-                    <span>{post.comments}</span>
-                  </button>
-                  <button className="post-action-btn">
-                    <FiShare2 />
-                  </button>
-                  
-                  <div style={{ flex: 1 }}></div>
-                  
-                  <button 
-                    className={`post-action-btn ${post.saved ? 'saved' : ''}`}
-                    onClick={() => toggleSave(post.id)}
-                  >
-                    <FiBookmark fill={post.saved ? 'currentColor' : 'none'} />
-                  </button>
-                </div>
+            {posts.length === 0 ? (
+              <div className="empty-state">
+                <span className="empty-state-icon">🌍</span>
+                <h3 className="empty-state-title">No public trips yet</h3>
+                <p className="empty-state-text">Be the first to share your itinerary with the community!</p>
               </div>
-            ))}
+            ) : (
+              posts.map(post => (
+                <div key={post.id} className="card post-card">
+                  <div className="card-body">
+                    
+                    {/* Post Header */}
+                    <div className="post-header">
+                      <div className="post-author-info">
+                        <img src={post.author.avatar} alt={post.author.name} className="avatar" />
+                        <div>
+                          <div className="post-author-name">{post.author.name}</div>
+                          <div className="post-author-meta">
+                            <span>{post.author.handle}</span> • <span>{post.timeAgo}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <button className="btn-icon btn-sm text-neutral-400"><FiMoreHorizontal /></button>
+                    </div>
+                    
+                    {/* Post Content */}
+                    <div className="post-content mt-4">
+                      <p>{post.content}</p>
+                    </div>
+
+                    {/* Attached Trip Card (if any) */}
+                    {post.tripDetails && (
+                      <div className="post-trip-attachment mt-4">
+                        <img src={post.tripDetails.image} alt={post.tripDetails.title} className="post-trip-image" />
+                        <div className="post-trip-info">
+                          <h4>{post.tripDetails.title}</h4>
+                          <div className="post-trip-meta">
+                            <span><FiMapPin /> {post.tripDetails.destinations}</span>
+                            <span><FiCalendar /> {post.tripDetails.duration}</span>
+                          </div>
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <button className="btn btn-secondary btn-sm mt-2" onClick={() => navigate(`/trips/${post.tripDetails.id}`)}>View Itinerary</button>
+                            <button className="btn btn-primary btn-sm mt-2" onClick={() => copyTrip(post.tripDetails.id)}><FiCopy /> Copy Trip</button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Post Footer/Actions */}
+                  <div className="card-footer post-footer">
+                    <button 
+                      className={`post-action-btn ${post.liked ? 'liked' : ''}`}
+                      onClick={() => toggleLike(post.id)}
+                    >
+                      <FiHeart fill={post.liked ? 'currentColor' : 'none'} />
+                      <span>{post.likes}</span>
+                    </button>
+                    <button className="post-action-btn">
+                      <FiMessageCircle />
+                      <span>{post.comments}</span>
+                    </button>
+                    <button className="post-action-btn">
+                      <FiShare2 />
+                    </button>
+                    
+                    <div style={{ flex: 1 }}></div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
 

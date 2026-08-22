@@ -2,60 +2,43 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { FiArrowLeft, FiMapPin, FiCalendar, FiClock, FiDollarSign, FiShare2, FiEdit2, FiPieChart, FiList, FiAlertTriangle } from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
-import api from '../../services/api';
+import { tripsAPI } from '../../services/api';
 import './TripDetails.css';
 
 export default function TripDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [trip, setTrip] = useState(null);
+  const [budgetData, setBudgetData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState('list'); // list or budget
 
-  // Mock Data
-  const [activities, setActivities] = useState([
-    { id: 1, day: 1, type: 'accommodation', title: 'Grand Hotel', cost: 450 },
-    { id: 2, day: 1, type: 'activity', title: 'City Walking Tour', cost: 25 },
-    { id: 3, day: 1, type: 'meal', title: 'Dinner at Luigis', cost: 65 },
-    { id: 4, day: 2, type: 'activity', title: 'Museum Visit', cost: 15 },
-    { id: 5, day: 2, type: 'transport', title: 'Train to Osaka', cost: 120 },
-  ]);
-
   useEffect(() => {
-    const fetchTrip = async () => {
+    const fetchTripData = async () => {
       try {
         setLoading(true);
-        const res = await api.get(`/trips/${id}`);
-        setTrip(res.data);
+        const [resTrip, resBudget] = await Promise.all([
+          tripsAPI.getById(id),
+          tripsAPI.getBudget(id).catch(() => ({ data: { total_budget: 0, total_spent: 0, remaining: 0, breakdown: {} } }))
+        ]);
+        setTrip(resTrip.data);
+        setBudgetData(resBudget.data);
       } catch (error) {
-        setTrip({
-          id: id,
-          name: 'Summer in Kyoto',
-          starting_location: 'Kyoto, Japan; Osaka, Japan',
-          start_date: '2026-07-10',
-          end_date: '2026-07-24',
-          duration_days: 14,
-          budget: 600, // Intentionally low for over-budget warning
-          status: 'upcoming',
-          cover_image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-        });
+        toast.error('Failed to load trip details');
+        navigate('/my-trips');
       } finally {
         setLoading(false);
       }
     };
-    fetchTrip();
-  }, [id]);
+    fetchTripData();
+  }, [id, navigate]);
 
-  const totalCost = activities.reduce((sum, act) => sum + (act.cost || 0), 0);
-  const remainingBudget = (trip?.budget || 0) - totalCost;
+  const totalCost = budgetData?.total_spent || 0;
+  const remainingBudget = budgetData?.remaining || 0;
   const isOverBudget = remainingBudget < 0;
 
-  // Category Breakdown
   const categories = ['accommodation', 'activity', 'meal', 'transport', 'misc'];
-  const expensesByCategory = categories.reduce((acc, cat) => {
-    acc[cat] = activities.filter(a => a.type === cat).reduce((sum, a) => sum + (a.cost || 0), 0);
-    return acc;
-  }, {});
+  const expensesByCategory = budgetData?.breakdown || {};
 
   if (loading) {
     return <div className="loading-spinner-container"><div className="spinner"></div></div>;

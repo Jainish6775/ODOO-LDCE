@@ -20,38 +20,12 @@ export default function MyTrips() {
   const fetchTrips = async () => {
     try {
       setLoading(true);
-      // Try to fetch from real API, fallback to mock if endpoint doesn't exist
       const response = await api.get('/trips');
       setTrips(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Failed to fetch trips:', error);
-      // MOCK DATA: Fallback if API fails or doesn't exist yet
-      setTrips([
-        {
-          id: 1,
-          name: 'Summer in Kyoto',
-          starting_location: 'Kyoto, Japan',
-          start_date: '2026-07-10',
-          end_date: '2026-07-24',
-          duration_days: 14,
-          budget: 3500,
-          status: 'upcoming',
-          progress: 85,
-          cover_image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-        },
-        {
-          id: 2,
-          name: 'Weekend Getaway',
-          starting_location: 'Paris, France',
-          start_date: null,
-          end_date: null,
-          duration_days: 3,
-          budget: 800,
-          status: 'draft',
-          progress: 20,
-          cover_image: 'https://images.unsplash.com/photo-1502602898657-3e90760020c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-        }
-      ]);
+      toast.error('Failed to load your trips. Please try again later.');
+      setTrips([]);
     } finally {
       setLoading(false);
     }
@@ -64,9 +38,7 @@ export default function MyTrips() {
         setTrips(trips.filter(t => t.id !== id));
         toast.success('Trip deleted successfully');
       } catch (error) {
-        // Fallback for mock data testing
-        setTrips(trips.filter(t => t.id !== id));
-        toast.success('Trip deleted successfully (Mock)');
+        toast.error('Failed to delete trip.');
       }
     }
   };

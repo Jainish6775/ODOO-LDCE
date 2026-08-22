@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiArrowLeft, FiArrowRight, FiSave, FiCheck, FiMap, FiCalendar, FiDollarSign, FiEye } from 'react-icons/fi';
+import { FiArrowLeft, FiArrowRight, FiSave, FiCheck, FiMap, FiCalendar, FiDollarSign, FiEye, FiUsers, FiImage } from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
-import api from '../../services/api';
+import { tripsAPI } from '../../services/api';
 import './Trips.css';
 import './CreateTrip.css';
 
@@ -12,13 +12,14 @@ export default function CreateTrip() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
-    description: '',
-    destinations: '',
+    startingLocation: '',
     start_date: '',
     end_date: '',
+    description: '',
     budget_limit: '',
-    currency: 'USD',
+    traveler_count: '1',
     visibility: 'private',
+    cover_image: '',
   });
 
   const [errors, setErrors] = useState({});
@@ -26,7 +27,6 @@ export default function CreateTrip() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    // Clear error when user types
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: null }));
     }
@@ -35,15 +35,19 @@ export default function CreateTrip() {
   const validateStep = () => {
     const newErrors = {};
     if (step === 1) {
-      if (!formData.title.trim()) newErrors.title = 'Trip title is required';
-    } else if (step === 2) {
-      if (!formData.destinations.trim()) newErrors.destinations = 'At least one destination is required';
+      if (!formData.title.trim()) newErrors.title = 'Trip name is required';
+      if (!formData.startingLocation.trim()) newErrors.startingLocation = 'Starting location is required';
+      if (!formData.start_date) newErrors.start_date = 'Start date is required';
+      if (!formData.end_date) newErrors.end_date = 'End date is required';
       if (formData.start_date && formData.end_date && new Date(formData.start_date) > new Date(formData.end_date)) {
         newErrors.end_date = 'End date must be after start date';
       }
-    } else if (step === 3) {
-      if (formData.budget_limit && isNaN(formData.budget_limit)) {
-        newErrors.budget_limit = 'Budget must be a valid number';
+    } else if (step === 2) {
+      if (formData.budget_limit && (isNaN(formData.budget_limit) || Number(formData.budget_limit) < 0)) {
+        newErrors.budget_limit = 'Budget must be a valid positive number';
+      }
+      if (formData.traveler_count && (isNaN(formData.traveler_count) || Number(formData.traveler_count) < 1)) {
+        newErrors.traveler_count = 'Traveler count must be at least 1';
       }
     }
     
@@ -69,28 +73,24 @@ export default function CreateTrip() {
       setIsSubmitting(true);
       const payload = {
         name: formData.title,
-        description: formData.description,
-        startingLocation: formData.destinations,
+        startingLocation: formData.startingLocation,
         startDate: formData.start_date,
         endDate: formData.end_date,
+        description: formData.description,
         budget: formData.budget_limit ? Number(formData.budget_limit) : null,
+        travelerCount: formData.traveler_count ? Number(formData.traveler_count) : 1,
         visibility: formData.visibility,
+        coverImage: formData.cover_image || null,
         status: isDraft ? 'draft' : 'upcoming'
       };
 
-      // Try actual API
-      try {
-        const res = await api.post('/trips', payload);
-        toast.success(isDraft ? 'Draft saved!' : 'Trip created successfully!');
-        navigate(`/trips/${res.data.id}`);
-      } catch (apiError) {
-        // Fallback if endpoint missing
-        console.warn('API error, using mock fallback', apiError);
-        toast.success(isDraft ? 'Draft saved! (Mock)' : 'Trip created successfully! (Mock)');
-        navigate('/my-trips');
-      }
+      const res = await tripsAPI.create(payload);
+      toast.success(isDraft ? 'Draft saved!' : 'Trip created successfully!');
+      
+      // Redirect to itinerary builder
+      navigate(`/trips/${res.data.id}/itinerary`);
     } catch (error) {
-      toast.error('Failed to save trip. Please try again.');
+      toast.error(error.response?.data?.error || 'Failed to save trip. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -109,28 +109,27 @@ export default function CreateTrip() {
       <div className="stepper">
         {[
           { num: 1, label: 'Basic Info', icon: <FiMap /> },
-          { num: 2, label: 'Destinations', icon: <FiCalendar /> },
-          { num: 3, label: 'Budget', icon: <FiDollarSign /> },
-          { num: 4, label: 'Review', icon: <FiCheck /> }
+          { num: 2, label: 'Details', icon: <FiDollarSign /> },
+          { num: 3, label: 'Review', icon: <FiCheck /> }
         ].map((s) => (
           <div key={s.num} className={`step ${step === s.num ? 'active' : step > s.num ? 'completed' : ''}`}>
             <div className="step-circle">{s.num}</div>
             <div className="step-label">{s.label}</div>
-            {s.num < 4 && <div className="step-line"></div>}
+            {s.num < 3 && <div className="step-line"></div>}
           </div>
         ))}
       </div>
 
       <div className="card create-trip-card">
         <div className="card-body">
-          {/* Step 1: Info */}
+          {/* Step 1: Info & Dates */}
           {step === 1 && (
             <div className="step-content animation-slide-up">
-              <h2>Trip Information</h2>
-              <p className="form-hint">Give your adventure a catchy name.</p>
+              <h2>Trip Basics</h2>
+              <p className="form-hint">Where are you going and when?</p>
               
               <div className="form-group mt-6">
-                <label className="form-label">Trip Title <span className="required">*</span></label>
+                <label className="form-label">Trip Name <span className="required">*</span></label>
                 <input 
                   type="text" 
                   name="title" 
@@ -141,6 +140,44 @@ export default function CreateTrip() {
                   autoFocus
                 />
                 {errors.title && <span className="form-error">{errors.title}</span>}
+              </div>
+
+              <div className="form-group mt-4">
+                <label className="form-label">Starting Location <span className="required">*</span></label>
+                <input 
+                  type="text" 
+                  name="startingLocation" 
+                  className={`form-input ${errors.startingLocation ? 'error' : ''}`}
+                  placeholder="e.g., New York, JFK Airport"
+                  value={formData.startingLocation}
+                  onChange={handleChange}
+                />
+                {errors.startingLocation && <span className="form-error">{errors.startingLocation}</span>}
+              </div>
+
+              <div className="auth-form-row mt-4">
+                <div className="form-group">
+                  <label className="form-label">Start Date <span className="required">*</span></label>
+                  <input 
+                    type="date" 
+                    name="start_date" 
+                    className={`form-input ${errors.start_date ? 'error' : ''}`}
+                    value={formData.start_date}
+                    onChange={handleChange}
+                  />
+                  {errors.start_date && <span className="form-error">{errors.start_date}</span>}
+                </div>
+                <div className="form-group">
+                  <label className="form-label">End Date <span className="required">*</span></label>
+                  <input 
+                    type="date" 
+                    name="end_date" 
+                    className={`form-input ${errors.end_date ? 'error' : ''}`}
+                    value={formData.end_date}
+                    onChange={handleChange}
+                  />
+                  {errors.end_date && <span className="form-error">{errors.end_date}</span>}
+                </div>
               </div>
 
               <div className="form-group mt-4">
@@ -156,57 +193,11 @@ export default function CreateTrip() {
             </div>
           )}
 
-          {/* Step 2: Destinations & Dates */}
+          {/* Step 2: Budget, Travelers & Visibility */}
           {step === 2 && (
             <div className="step-content animation-slide-up">
-              <h2>Destinations & Dates</h2>
-              <p className="form-hint">Where are you going and when?</p>
-              
-              <div className="form-group mt-6">
-                <label className="form-label">Primary Destination(s) <span className="required">*</span></label>
-                <input 
-                  type="text" 
-                  name="destinations" 
-                  className={`form-input ${errors.destinations ? 'error' : ''}`}
-                  placeholder="e.g., Tokyo, Japan; Seoul, South Korea"
-                  value={formData.destinations}
-                  onChange={handleChange}
-                  autoFocus
-                />
-                {errors.destinations && <span className="form-error">{errors.destinations}</span>}
-              </div>
-
-              <div className="auth-form-row mt-4">
-                <div className="form-group">
-                  <label className="form-label">Start Date (Optional)</label>
-                  <input 
-                    type="date" 
-                    name="start_date" 
-                    className="form-input"
-                    value={formData.start_date}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">End Date (Optional)</label>
-                  <input 
-                    type="date" 
-                    name="end_date" 
-                    className={`form-input ${errors.end_date ? 'error' : ''}`}
-                    value={formData.end_date}
-                    onChange={handleChange}
-                  />
-                  {errors.end_date && <span className="form-error">{errors.end_date}</span>}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Step 3: Budget & Visibility */}
-          {step === 3 && (
-            <div className="step-content animation-slide-up">
-              <h2>Budget & Visibility</h2>
-              <p className="form-hint">Set limits and decide who can see this trip.</p>
+              <h2>Additional Details</h2>
+              <p className="form-hint">Set limits, companions, and decide who can see this trip.</p>
               
               <div className="auth-form-row mt-6">
                 <div className="form-group">
@@ -227,13 +218,37 @@ export default function CreateTrip() {
                   {errors.budget_limit && <span className="form-error">{errors.budget_limit}</span>}
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Currency</label>
-                  <select name="currency" className="form-input form-select" value={formData.currency} onChange={handleChange}>
-                    <option value="USD">USD ($)</option>
-                    <option value="EUR">EUR (€)</option>
-                    <option value="GBP">GBP (£)</option>
-                    <option value="JPY">JPY (¥)</option>
-                  </select>
+                  <label className="form-label">Number of Travelers</label>
+                  <div className="input-group">
+                    <FiUsers style={{ position: 'absolute', left: '12px', color: 'var(--neutral-500)' }} />
+                    <input 
+                      type="number" 
+                      name="traveler_count" 
+                      className={`form-input ${errors.traveler_count ? 'error' : ''}`}
+                      placeholder="e.g., 2"
+                      value={formData.traveler_count}
+                      onChange={handleChange}
+                      style={{ paddingLeft: '32px' }}
+                      min="1"
+                    />
+                  </div>
+                  {errors.traveler_count && <span className="form-error">{errors.traveler_count}</span>}
+                </div>
+              </div>
+
+              <div className="form-group mt-4">
+                <label className="form-label">Cover Image URL (Optional)</label>
+                <div className="input-group">
+                  <FiImage style={{ position: 'absolute', left: '12px', color: 'var(--neutral-500)' }} />
+                  <input 
+                    type="text" 
+                    name="cover_image" 
+                    className="form-input"
+                    placeholder="https://example.com/image.jpg"
+                    value={formData.cover_image}
+                    onChange={handleChange}
+                    style={{ paddingLeft: '32px' }}
+                  />
                 </div>
               </div>
 
@@ -261,37 +276,35 @@ export default function CreateTrip() {
             </div>
           )}
 
-          {/* Step 4: Review */}
-          {step === 4 && (
+          {/* Step 3: Review */}
+          {step === 3 && (
             <div className="step-content animation-slide-up">
               <h2>Review Your Trip</h2>
               <p className="form-hint">Make sure everything looks good before creating.</p>
               
               <div className="review-box mt-6">
                 <div className="review-item">
-                  <span className="review-label">Title</span>
+                  <span className="review-label">Trip Name</span>
                   <span className="review-value">{formData.title}</span>
                 </div>
-                {formData.description && (
-                  <div className="review-item">
-                    <span className="review-label">Description</span>
-                    <span className="review-value">{formData.description}</span>
-                  </div>
-                )}
                 <div className="review-item">
-                  <span className="review-label">Destinations</span>
-                  <span className="review-value">{formData.destinations}</span>
+                  <span className="review-label">Starting Location</span>
+                  <span className="review-value">{formData.startingLocation}</span>
                 </div>
                 <div className="review-item">
                   <span className="review-label">Dates</span>
                   <span className="review-value">
-                    {formData.start_date || 'TBD'} {formData.end_date ? `to ${formData.end_date}` : ''}
+                    {formData.start_date} to {formData.end_date}
                   </span>
+                </div>
+                <div className="review-item">
+                  <span className="review-label">Travelers</span>
+                  <span className="review-value">{formData.traveler_count}</span>
                 </div>
                 <div className="review-item">
                   <span className="review-label">Budget</span>
                   <span className="review-value">
-                    {formData.budget_limit ? `${formData.budget_limit} ${formData.currency}` : 'No limit set'}
+                    {formData.budget_limit ? `$${formData.budget_limit}` : 'No limit set'}
                   </span>
                 </div>
                 <div className="review-item">
@@ -315,7 +328,7 @@ export default function CreateTrip() {
             <button className="btn btn-ghost" onClick={() => handleSubmit(null, true)} disabled={isSubmitting}>
               <FiSave /> Save Draft
             </button>
-            {step < 4 ? (
+            {step < 3 ? (
               <button className="btn btn-primary" onClick={handleNext}>
                 Continue <FiArrowRight />
               </button>

@@ -6,6 +6,10 @@ const errorHandler = require('./middleware/errorHandler');
 // Route imports
 const authRoutes = require('./routes/auth.routes');
 const tripRoutes = require('./routes/trip.routes');
+const destinationsRoutes = require('./routes/destinations.routes');
+const activitiesRoutes = require('./routes/activities.routes');
+const itineraryRoutes = require('./routes/itinerary.routes');
+const communityRoutes = require('./routes/community.routes');
 
 const app = express();
 
@@ -25,6 +29,10 @@ app.get('/api/health', (req, res) => {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/trips', tripRoutes);
+app.use('/api/destinations', destinationsRoutes);
+app.use('/api/activities', activitiesRoutes);
+app.use('/api/stops', itineraryRoutes);
+app.use('/api/community', communityRoutes);
 
 // Error handler (must be last)
 app.use(errorHandler);
