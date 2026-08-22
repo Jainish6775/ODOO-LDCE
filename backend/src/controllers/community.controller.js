@@ -6,8 +6,10 @@ const communityController = {
       const { search } = req.query;
 
       let query = `
-        SELECT t.*, u.username as creator_name,
-        (SELECT COUNT(*) FROM likes WHERE trip_id = t.id) as likes_count
+        SELECT t.*, 
+        COALESCE(NULLIF(TRIM(CONCAT(u.first_name, ' ', u.last_name)), ''), u.email, 'Anonymous Explorer') AS creator_name,
+        u.profile_image AS creator_avatar,
+        COALESCE((SELECT COUNT(*) FROM likes WHERE trip_id = t.id), 0) AS likes_count
         FROM trips t
         JOIN users u ON t.user_id = u.id
         WHERE t.visibility = 'public'
@@ -21,8 +23,24 @@ const communityController = {
 
       query += ` ORDER BY t.created_at DESC LIMIT 50`;
 
-      const { rows } = await db.query(query, params);
-      res.json(rows);
+      try {
+        const { rows } = await db.query(query, params);
+        res.json(rows);
+      } catch (err) {
+        // Fallback without subquery if table was just created
+        const fallbackQuery = `
+          SELECT t.*, 
+          COALESCE(NULLIF(TRIM(CONCAT(u.first_name, ' ', u.last_name)), ''), u.email, 'Anonymous Explorer') AS creator_name,
+          u.profile_image AS creator_avatar,
+          0 AS likes_count
+          FROM trips t
+          JOIN users u ON t.user_id = u.id
+          WHERE t.visibility = 'public'
+          ORDER BY t.created_at DESC LIMIT 50
+        `;
+        const { rows } = await db.query(fallbackQuery);
+        res.json(rows);
+      }
     } catch (error) {
       next(error);
     }

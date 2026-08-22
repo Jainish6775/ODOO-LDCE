@@ -210,16 +210,16 @@ export default function TripDetails() {
       <div className="trip-action-bar hide-print">
         <div className="tab-group-styled">
           <button 
+            className={`tab-pill ${viewMode === 'timeline' ? 'active' : ''}`} 
+            onClick={() => setViewMode('timeline')}
+          >
+            <FiList /> Screen 9: Timeline & Budget View
+          </button>
+          <button 
             className={`tab-pill ${viewMode === 'budget' ? 'active' : ''}`} 
             onClick={() => setViewMode('budget')}
           >
             <FiPieChart /> Budget Analytics
-          </button>
-          <button 
-            className={`tab-pill ${viewMode === 'list' ? 'active' : ''}`} 
-            onClick={() => setViewMode('list')}
-          >
-            <FiList /> Itinerary Plan
           </button>
         </div>
 
@@ -258,7 +258,216 @@ export default function TripDetails() {
       )}
 
       {/* Main View Mode Area */}
-      {viewMode === 'budget' ? (
+      {viewMode === 'timeline' ? (
+        /* Screen 9: Itinerary View Screen with budget section (State-of-the-Art Luxury Design) */
+        <div className="card screen9-container-luxury p-8">
+          
+          {/* Top Control Bar matching Screen 9 wireframe: Search bar, Group by, Filter, Sort by */}
+          <div className="screen9-control-bar-luxury mb-8">
+            <div className="screen9-search-box-luxury">
+              <input 
+                type="text" 
+                className="screen9-search-input-luxury" 
+                placeholder="Search bar ......" 
+              />
+            </div>
+            <div className="screen9-pills-group-luxury">
+              <select className="screen9-select-pill-luxury">
+                <option value="">Group by</option>
+                <option value="day">By Day</option>
+                <option value="category">By Category</option>
+              </select>
+              <select className="screen9-select-pill-luxury">
+                <option value="">Filter</option>
+                <option value="activities">Activities Only</option>
+                <option value="expenses">Expenses Only</option>
+              </select>
+              <select className="screen9-select-pill-luxury">
+                <option value="">Sort by...</option>
+                <option value="time">By Time</option>
+                <option value="cost">By Cost</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Main Title matching Screen 9 wireframe */}
+          <div className="screen9-header-text-luxury text-center mb-8">
+            <h2 className="screen9-title-luxury capitalize">
+              Itinerary for {trip?.name || 'Goa Coastal Resort & Beach Retreat'}
+            </h2>
+            <p className="screen9-subtitle-luxury">Detailed day-by-day activity roadmap & expense breakdown</p>
+          </div>
+
+          {/* Table Subheadings matching Screen 9 wireframe: Physical Activity | Expense */}
+          <div className="screen9-columns-header-luxury mb-8">
+            <div className="day-col-spacer"></div>
+            <div className="column-head-badge activity-badge-head">
+              Physical Activity
+            </div>
+            <div className="column-head-badge expense-badge-head">
+              Expense
+            </div>
+          </div>
+
+          {/* Timeline Feed by Days (Day 1, Day 2, Day 3) */}
+          <div className="screen9-timeline-flow-luxury">
+            
+            {/* ================= Day 1 ================= */}
+            <div className="screen9-day-block-luxury mb-12">
+              
+              <div className="screen9-day-pill-container">
+                <div className="screen9-day-pill-badge">Day 1</div>
+              </div>
+
+              <div className="screen9-activities-stack-luxury">
+                
+                {/* Activity 1 */}
+                <div className="screen9-row-pair-luxury">
+                  <div className="screen9-box-luxury activity-box-luxury">
+                    <div className="activity-box-header">
+                      <span className="activity-time-pill"><FiClock size={12} /> 09:00 AM</span>
+                      <h4 className="activity-box-title">Flight Arrival & Hotel Check-in</h4>
+                    </div>
+                    <div className="activity-box-sub">
+                      <FiMapPin size={13} className="text-emerald-500" /> Calangute Beach Resort, Goa
+                    </div>
+                  </div>
+
+                  <div className="screen9-box-luxury expense-box-luxury">
+                    <span className="expense-val-luxury">{formatAmt(150)}</span>
+                    <span className="expense-cat-badge stay">STAY</span>
+                  </div>
+                </div>
+
+                {/* Downward Connector Arrow */}
+                <div className="screen9-connector-row">
+                  <div className="screen9-arrow-node">↓</div>
+                </div>
+
+                {/* Activity 2 */}
+                <div className="screen9-row-pair-luxury">
+                  <div className="screen9-box-luxury activity-box-luxury">
+                    <div className="activity-box-header">
+                      <span className="activity-time-pill"><FiClock size={12} /> 02:30 PM</span>
+                      <h4 className="activity-box-title">Water Sports & Scuba Diving</h4>
+                    </div>
+                    <div className="activity-box-sub">
+                      <FiMapPin size={13} className="text-emerald-500" /> Baga Beach Water Sports Center
+                    </div>
+                  </div>
+
+                  <div className="screen9-box-luxury expense-box-luxury">
+                    <span className="expense-val-luxury">{formatAmt(80)}</span>
+                    <span className="expense-cat-badge act">ACTIVITY</span>
+                  </div>
+                </div>
+
+                {/* Downward Connector Arrow */}
+                <div className="screen9-connector-row">
+                  <div className="screen9-arrow-node">↓</div>
+                </div>
+
+                {/* Activity 3 */}
+                <div className="screen9-row-pair-luxury">
+                  <div className="screen9-box-luxury activity-box-luxury">
+                    <div className="activity-box-header">
+                      <span className="activity-time-pill"><FiClock size={12} /> 07:30 PM</span>
+                      <h4 className="activity-box-title">Sunset Seafood Dinner & Beachfront Lounge</h4>
+                    </div>
+                    <div className="activity-box-sub">
+                      <FiMapPin size={13} className="text-emerald-500" /> Souza Lobo Beachfront Bistro
+                    </div>
+                  </div>
+
+                  <div className="screen9-box-luxury expense-box-luxury">
+                    <span className="expense-val-luxury">{formatAmt(60)}</span>
+                    <span className="expense-cat-badge food">FOOD</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            {/* ================= Day 2 ================= */}
+            <div className="screen9-day-block-luxury mb-12">
+              
+              <div className="screen9-day-pill-container">
+                <div className="screen9-day-pill-badge">Day 2</div>
+              </div>
+
+              <div className="screen9-activities-stack-luxury">
+                
+                {/* Activity 1 */}
+                <div className="screen9-row-pair-luxury">
+                  <div className="screen9-box-luxury activity-box-luxury">
+                    <div className="activity-box-header">
+                      <span className="activity-time-pill"><FiClock size={12} /> 10:00 AM</span>
+                      <h4 className="activity-box-title">Fort Aguada & Old Goa Latin Quarter Heritage Tour</h4>
+                    </div>
+                    <div className="activity-box-sub">
+                      <FiMapPin size={13} className="text-emerald-500" /> Fontainhas Heritage Colony, Goa
+                    </div>
+                  </div>
+
+                  <div className="screen9-box-luxury expense-box-luxury">
+                    <span className="expense-val-luxury">{formatAmt(45)}</span>
+                    <span className="expense-cat-badge tour">TOUR</span>
+                  </div>
+                </div>
+
+                {/* Downward Connector Arrow */}
+                <div className="screen9-connector-row">
+                  <div className="screen9-arrow-node">↓</div>
+                </div>
+
+                {/* Activity 2 */}
+                <div className="screen9-row-pair-luxury">
+                  <div className="screen9-box-luxury activity-box-luxury">
+                    <div className="activity-box-header">
+                      <span className="activity-time-pill"><FiClock size={12} /> 05:00 PM</span>
+                      <h4 className="activity-box-title">Mandovi River Sunset Cruise & Live Cultural Performance</h4>
+                    </div>
+                    <div className="activity-box-sub">
+                      <FiMapPin size={13} className="text-emerald-500" /> Panaji Jetty River Deck
+                    </div>
+                  </div>
+
+                  <div className="screen9-box-luxury expense-box-luxury">
+                    <span className="expense-val-luxury">{formatAmt(75)}</span>
+                    <span className="expense-cat-badge act">ACTIVITY</span>
+                  </div>
+                </div>
+
+                {/* Downward Connector Arrow */}
+                <div className="screen9-connector-row">
+                  <div className="screen9-arrow-node">↓</div>
+                </div>
+
+                {/* Activity 3 */}
+                <div className="screen9-row-pair-luxury">
+                  <div className="screen9-box-luxury activity-box-luxury">
+                    <div className="activity-box-header">
+                      <span className="activity-time-pill"><FiClock size={12} /> 08:30 PM</span>
+                      <h4 className="activity-box-title">Traditional Goan Fish Curry Tasting & Night Market</h4>
+                    </div>
+                    <div className="activity-box-sub">
+                      <FiMapPin size={13} className="text-emerald-500" /> Anjuna Night Market
+                    </div>
+                  </div>
+
+                  <div className="screen9-box-luxury expense-box-luxury">
+                    <span className="expense-val-luxury">{formatAmt(35)}</span>
+                    <span className="expense-cat-badge food">FOOD</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      ) : viewMode === 'budget' ? (
         <div className="budget-dashboard-grid">
           
           {/* Total Budget Summary Card */}
