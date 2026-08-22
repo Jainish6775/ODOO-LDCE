@@ -11,7 +11,6 @@ const TRAVEL_INTERESTS = [
 ];
 
 export default function Register() {
-  const { register } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
