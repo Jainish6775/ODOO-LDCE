@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { authAPI } from '../../services/api';
 import { toast } from 'react-hot-toast';
 import { FiEye, FiEyeOff, FiAlertCircle, FiCheck } from 'react-icons/fi';
-import '../../../src/components/layout/AppLayout.css';
+import '../../components/layout/AppLayout.css';
 
 const TRAVEL_INTERESTS = [
   'Adventure', 'Cultural', 'Relaxation', 'Budget', 'Luxury',

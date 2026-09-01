@@ -1,346 +1,232 @@
-/* ============================================
-   Itinerary Builder Styles
-   ============================================ */
+/* ==========================================================================
+   Itinerary Architect Studio Styles — Timeline Sequences
+   ========================================================================== */
 
-.itinerary-builder-container {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
-  height: calc(100vh - var(--header-height) - var(--space-12));
-  min-height: 600px;
+.itinerary-studio-page {
+  padding-top: var(--space-6);
+  padding-bottom: var(--space-12);
 }
 
-.itinerary-header {
+.itinerary-studio-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid var(--border-subtle);
   padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--neutral-200);
-  position: relative;
-}
-
-.itinerary-header-left {
-  display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   gap: var(--space-4);
 }
 
-.itinerary-title {
+.itinerary-main-title {
   font-size: var(--text-2xl);
-  margin-bottom: var(--space-1);
+  font-weight: var(--weight-extrabold);
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
 }
 
-.itinerary-subtitle {
-  font-size: var(--text-sm);
-  color: var(--neutral-500);
+.itinerary-main-meta {
   display: flex;
+  gap: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* 2-Column Studio Layout */
+.itinerary-studio-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: var(--space-8);
+  align-items: flex-start;
+}
+
+@media (max-width: 1024px) {
+  .itinerary-studio-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.itinerary-sequence-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.sequence-summary-bar {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  background: var(--bg-surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  flex-wrap: wrap;
   gap: var(--space-2);
 }
 
-.itinerary-header-right {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
+.summary-strip-title {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  display: block;
 }
 
-.mobile-actions-drawer {
-  background: var(--neutral-0);
-  padding: var(--space-4);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--neutral-200);
-  margin-bottom: var(--space-4);
+.summary-strip-sub {
+  font-size: 11px;
+  color: var(--text-muted);
 }
 
-/* Layout */
-.itinerary-layout {
-  display: flex;
-  gap: var(--space-6);
-  flex: 1;
-  overflow: hidden;
+.sequence-budget-tag {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border-subtle);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
 }
 
-/* Sidebar */
-.itinerary-sidebar {
-  width: 280px;
-  flex-shrink: 0;
+.sequence-budget-tag strong {
+  color: var(--accent-emerald);
+  font-family: var(--font-mono);
+}
+
+/* Cards Stack */
+.timeline-cards-stack {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  overflow-y: auto;
-  padding-right: var(--space-2);
 }
 
-.widget-title {
-  font-size: var(--text-base);
-  font-weight: var(--weight-semibold);
-  margin-bottom: var(--space-3);
-}
-
-.budget-stats {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.budget-stat {
-  display: flex;
-  justify-content: space-between;
-  font-size: var(--text-sm);
-  color: var(--neutral-600);
-}
-
-.font-bold {
-  font-weight: var(--weight-bold);
-  color: var(--neutral-900);
-}
-
-.text-success { color: var(--success); }
-.text-error { color: var(--error); }
-
-/* Days Widget */
-.days-widget {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+.timeline-dossier-card {
+  background: var(--bg-surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
   overflow: hidden;
-}
-
-.days-header {
-  padding: var(--space-4);
-  border-bottom: 1px solid var(--neutral-100);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.days-header .widget-title {
-  margin-bottom: 0;
-}
-
-.days-list {
-  flex: 1;
-  overflow-y: auto;
-  padding: var(--space-2);
-}
-
-.day-btn {
-  width: 100%;
-  text-align: left;
-  padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--space-1);
   transition: all var(--transition-fast);
 }
 
-.day-btn:hover {
-  background: var(--neutral-50);
-}
-
-.day-btn.active {
-  background: var(--primary-50);
-  color: var(--primary-700);
-}
-
-.day-btn-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.day-num {
-  font-weight: var(--weight-medium);
-}
-
-.day-count {
-  font-size: var(--text-xs);
-  color: var(--neutral-500);
-  background: var(--neutral-100);
-  padding: 2px 8px;
-  border-radius: var(--radius-full);
-}
-
-.day-btn.active .day-count {
-  background: var(--primary-100);
-  color: var(--primary-700);
-}
-
-/* Main Timeline Area */
-.itinerary-main {
-  flex: 1;
-  background: var(--neutral-0);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--neutral-200);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.day-header {
-  padding: var(--space-4) var(--space-6);
-  border-bottom: 1px solid var(--neutral-200);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--neutral-50);
-}
-
-.timeline-container {
-  flex: 1;
-  overflow-y: auto;
-  padding: var(--space-6);
-  background: var(--neutral-50);
-}
-
-/* Timeline Components */
-.timeline {
-  position: relative;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.timeline::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 90px;
-  width: 2px;
-  background: var(--neutral-200);
-}
-
-.timeline-item {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: var(--space-6);
-  position: relative;
-}
-
-.timeline-time {
-  width: 70px;
-  padding-right: var(--space-4);
-  text-align: right;
-  font-weight: var(--weight-semibold);
-  color: var(--neutral-600);
-  font-size: var(--text-sm);
-  padding-top: var(--space-3);
-  flex-shrink: 0;
-}
-
-.timeline-marker {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-full);
-  background: var(--neutral-0);
-  border: 4px solid var(--neutral-200);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  margin-right: var(--space-4);
-  flex-shrink: 0;
-  box-shadow: 0 0 0 4px var(--neutral-50);
-}
-
-.timeline-icon {
-  width: 24px;
-  height: 24px;
-  border-radius: var(--radius-full);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-}
-
-.timeline-card {
-  flex: 1;
+.timeline-dossier-card:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-surface-2);
 }
 
 .timeline-card-header {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: var(--space-2);
-}
-
-.timeline-card-title {
-  font-size: var(--text-lg);
-}
-
-.timeline-card-details {
-  display: flex;
   align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-surface-2);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.sequence-step-pill {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: var(--weight-bold);
+  color: var(--primary-400);
+  background: var(--primary-100);
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+}
+
+.sequence-type-emoji {
+  font-size: 16px;
+}
+
+.sequence-section-title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+
+.timeline-card-body {
+  padding: var(--space-4);
+}
+
+.sequence-desc-text {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.sequence-subitems-panel {
+  background: var(--bg-surface-0);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.subitem-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+}
+
+.subitem-title {
+  color: var(--text-secondary);
+}
+
+.subitem-category {
+  color: var(--text-muted);
+}
+
+.subitem-price {
+  color: var(--text-primary);
+}
+
+.sequence-footer-pills {
+  display: flex;
   gap: var(--space-3);
   flex-wrap: wrap;
 }
 
-.timeline-meta {
+.sequence-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-surface-0);
+  border: 1px solid var(--border-subtle);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.sequence-pill.budget strong {
+  color: var(--accent-emerald);
+}
+
+/* Add Stage Trigger */
+.add-stage-dashed-trigger {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
-  font-size: var(--text-sm);
-  color: var(--neutral-500);
-}
-
-.hover-text-primary:hover {
-  color: var(--primary-600);
-}
-
-.p-4 {
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
   padding: var(--space-4);
+  background: transparent;
+  border: 1px dashed var(--border-medium);
+  border-radius: var(--radius-lg);
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-fast);
 }
 
-.mt-2 { margin-top: var(--space-2); }
-.mt-3 { margin-top: var(--space-3); }
-.mt-4 { margin-top: var(--space-4); }
-
-@media (max-width: 992px) {
-  .itinerary-layout {
-    flex-direction: column;
-  }
-  
-  .itinerary-sidebar {
-    width: 100%;
-    flex-direction: row;
-    height: auto;
-    overflow-y: visible;
-  }
-  
-  .budget-widget {
-    display: none; /* Hide budget on small screens or move it somewhere else */
-  }
-  
-  .days-widget {
-    height: 120px;
-  }
+.add-stage-dashed-trigger:hover {
+  background: var(--bg-surface-1);
+  border-color: var(--primary-500);
+  color: var(--primary-400);
 }
 
-@media (max-width: 768px) {
-  .itinerary-builder-container {
-    height: auto;
-  }
-  
-  .timeline::before {
-    left: 20px;
-  }
-  
-  .timeline-time {
-    display: none;
-  }
-  
-  .timeline-item {
-    padding-left: 0;
-  }
-  
-  .timeline-marker {
-    margin-right: var(--space-3);
-  }
-  
-  .timeline-card-details {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-1);
-  }
+/* Sidebar Column */
+.itinerary-sidebar-col {
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: calc(var(--header-height) + 16px);
 }

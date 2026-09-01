@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiChevronLeft, FiChevronRight, FiCalendar, FiList, FiMapPin, FiPlus, FiClock, FiDollarSign } from 'react-icons/fi';
-import { toast } from 'react-hot-toast';
+import { FiChevronLeft, FiChevronRight, FiCalendar, FiList, FiMapPin, FiClock } from 'react-icons/fi';
 import { tripsAPI } from '../../services/api';
+import { sampleTrips } from '../../data/sampleTrips';
 import './TripCalendar.css';
 
 export default function TripCalendar() {
@@ -12,62 +12,11 @@ export default function TripCalendar() {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchTripsData();
-  }, []);
-
-  const fetchTripsData = async () => {
+  const fetchTripsData = useCallback(async () => {
     try {
       setLoading(true);
       const res = await tripsAPI.getAll();
       let loadedTrips = Array.isArray(res.data) ? res.data : [];
-
-      const sampleTrips = [
-        {
-          id: 101,
-          name: 'Goa Coastal Resort & Beach Retreat',
-          starting_location: 'Goa, India',
-          start_date: '2026-08-20',
-          end_date: '2026-08-28',
-          duration_days: 8,
-          budget: 50000,
-          status: 'Ongoing',
-          color: '#10b981'
-        },
-        {
-          id: 105,
-          name: 'Swiss Alps Winter Skiing',
-          starting_location: 'Zermatt, Switzerland',
-          start_date: '2026-08-05',
-          end_date: '2026-08-15',
-          duration_days: 10,
-          budget: 4500,
-          status: 'Ongoing',
-          color: '#3b82f6'
-        },
-        {
-          id: 102,
-          name: 'Paris & Louvre Museum Tour',
-          starting_location: 'Paris, France',
-          start_date: '2026-09-10',
-          end_date: '2026-09-18',
-          duration_days: 8,
-          budget: 3500,
-          status: 'Up-coming',
-          color: '#8b5cf6'
-        },
-        {
-          id: 104,
-          name: 'Kyoto Ancient Shrines & Tea Experience',
-          starting_location: 'Kyoto, Japan',
-          start_date: '2026-07-10',
-          end_date: '2026-07-16',
-          duration_days: 6,
-          budget: 2800,
-          status: 'Completed',
-          color: '#64748b'
-        }
-      ];
 
       const existingIds = new Set(loadedTrips.map(t => t.id));
       const merged = [...loadedTrips];
@@ -78,12 +27,16 @@ export default function TripCalendar() {
       });
 
       setTrips(merged);
-    } catch (err) {
-      toast.error('Failed to load trips for calendar.');
+    } catch {
+      setTrips(sampleTrips);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchTripsData();
+  }, [fetchTripsData]);
 
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();

@@ -1,350 +1,243 @@
-/* ============================================
-   Trips Feature Styles - Screen 6 Schema
-   ============================================ */
+/* ==========================================================================
+   Expedition Queue Styles — Boarding Pass Dossiers
+   ========================================================================== */
 
-.trips-container-schema {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
+.expedition-queue-page {
+  padding-top: var(--space-6);
+  padding-bottom: var(--space-12);
 }
 
-.trips-header {
+.queue-page-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: var(--space-4);
+  flex-wrap: wrap;
   gap: var(--space-4);
 }
 
-.trips-title {
-  font-size: var(--text-3xl);
-  margin-bottom: var(--space-1);
-  color: var(--neutral-900);
+.queue-page-title {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-extrabold);
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
 }
 
-.trips-subtitle {
-  color: var(--neutral-500);
+.queue-page-subtitle {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin-top: 2px;
 }
 
-/* Screen 6 Controls Bar */
-.screen6-controls-bar {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  background: var(--neutral-0);
-  border: 1px solid var(--neutral-200);
-  border-radius: var(--radius-xl);
-  padding: var(--space-4);
-  box-shadow: var(--shadow-sm);
-}
-
-.screen6-search-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-
-.screen6-search-icon {
-  position: absolute;
-  left: 14px;
-  color: var(--neutral-400);
-  font-size: 16px;
-}
-
-.screen6-search-input {
-  width: 100%;
-  padding: 10px 14px 10px 42px;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--neutral-300);
-  background: var(--neutral-50);
-  font-size: var(--text-sm);
-  color: var(--neutral-900);
-  outline: none;
-  transition: all 150ms ease;
-}
-
-.screen6-search-input:focus {
-  border-color: var(--primary-500);
-  background: var(--neutral-0);
-  box-shadow: 0 0 0 3px rgba(32, 201, 151, 0.15);
-}
-
-.screen6-pills-group {
+/* Telemetry Pills Bar */
+.queue-telemetry-bar {
   display: flex;
   gap: var(--space-3);
   flex-wrap: wrap;
-  align-items: center;
 }
 
-.control-pill-box {
+.telemetry-pill {
+  background: var(--bg-surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 4px 12px;
   display: flex;
   align-items: center;
   gap: 6px;
-  background: var(--neutral-50);
-  border: 1px solid var(--neutral-300);
-  padding: 6px 14px;
-  border-radius: var(--radius-full);
   font-size: var(--text-xs);
-  color: var(--neutral-700);
 }
 
-.control-select {
-  border: none;
-  background: transparent;
-  font-size: var(--text-xs);
-  font-weight: var(--weight-bold);
-  color: var(--neutral-900);
-  outline: none;
-  cursor: pointer;
-}
-
-/* Grouped Sections */
-.group-heading-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding-bottom: 4px;
-  border-bottom: 2px solid var(--neutral-100);
-}
-
-.group-heading-title {
-  font-size: var(--text-xl);
-  font-weight: var(--weight-bold);
-  color: var(--neutral-900);
-}
-
-.group-status-dot {
-  width: 10px;
-  height: 10px;
+.telemetry-pill-dot {
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
 }
 
-.ongoing-dot { background: #10b981; }
-.upcoming-dot { background: #3b82f6; }
-.completed-dot { background: #6b7280; }
-.draft-dot { background: #f59e0b; }
+.telemetry-pill-dot.blue { background: var(--primary-400); box-shadow: 0 0 6px var(--primary-400); }
+.telemetry-pill-dot.emerald { background: var(--accent-emerald); box-shadow: 0 0 6px var(--accent-emerald); }
+.telemetry-pill-dot.amber { background: var(--accent-amber); box-shadow: 0 0 6px var(--accent-amber); }
 
-.group-count-tag {
-  background: var(--neutral-100);
-  color: var(--neutral-700);
-  font-size: 11px;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: var(--radius-full);
+.telemetry-pill-label {
+  color: var(--text-muted);
 }
 
-.no-trips-group-card {
-  background: var(--neutral-50);
-  border: 1px dashed var(--neutral-300);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4);
-  font-size: var(--text-xs);
-  color: var(--neutral-500);
-  text-align: center;
+.telemetry-pill-val {
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
 }
 
-/* Trip Grid & Cards */
-.trips-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: var(--space-6);
-}
-
-.trip-card-schema {
+/* Toolbar */
+.queue-controls-toolbar {
   display: flex;
-  flex-direction: column;
-  height: 100%;
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-  border: 1px solid var(--neutral-200);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-  transition: all 250ms ease;
-}
-
-.trip-card-schema:hover {
-  border-color: var(--primary-400);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
-}
-
-.trip-card-image-container {
-  position: relative;
-  height: 190px;
-  width: 100%;
-  overflow: hidden;
-}
-
-.trip-card-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform var(--transition-slow);
-}
-
-.trip-card-schema:hover .trip-card-image {
-  transform: scale(1.05);
-}
-
-.trip-card-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: var(--space-3) var(--space-4);
-  display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: flex-start;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%);
+  gap: var(--space-4);
+  background: var(--bg-surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+  flex-wrap: wrap;
 }
 
-.trip-card-menu-container {
-  position: relative;
-}
-
-.trip-card-menu-btn {
-  background: rgba(255,255,255,0.2);
-  backdrop-filter: blur(4px);
-  color: white;
-  border-radius: var(--radius-full);
-}
-
-.trip-card-menu-btn:hover {
-  background: rgba(255,255,255,0.3);
-}
-
-.trip-card-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: var(--space-2);
-  background: var(--neutral-0);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--neutral-200);
-  width: 180px;
-  z-index: var(--z-dropdown);
-  display: none;
-  flex-direction: column;
-  padding: var(--space-2) 0;
-  animation: fadeIn var(--transition-fast);
-}
-
-.trip-card-menu-container:hover .trip-card-dropdown {
+.queue-search-box {
   display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.45rem 0.8rem;
+  flex: 1;
+  min-width: 220px;
 }
 
-.trip-card-dropdown button {
+.queue-search-box input {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: var(--text-xs);
+  outline: none;
+  width: 100%;
+}
+
+.queue-toolbar-right {
   display: flex;
   align-items: center;
   gap: var(--space-3);
+}
+
+/* Boarding Pass Cards */
+.boarding-pass-card {
+  background: var(--bg-surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+
+.boarding-pass-card:hover {
+  background: var(--bg-surface-2);
+  border-color: var(--border-hover);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.boarding-pass-thumb-wrap {
+  position: relative;
+  height: 160px;
+  overflow: hidden;
+}
+
+.boarding-pass-img {
   width: 100%;
-  padding: var(--space-2) var(--space-4);
-  text-align: left;
-  font-size: var(--text-sm);
-  color: var(--neutral-700);
+  height: 100%;
+  object-fit: cover;
+  transition: transform 350ms ease;
 }
 
-.trip-card-dropdown button:hover {
-  background: var(--neutral-50);
-  color: var(--primary-700);
+.boarding-pass-card:hover .boarding-pass-img {
+  transform: scale(1.06);
 }
 
-.trip-card-dropdown button.text-error {
-  color: var(--error);
+.boarding-code-tag {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: var(--weight-bold);
+  background: rgba(7, 9, 14, 0.85);
+  backdrop-filter: blur(8px);
+  color: var(--primary-300);
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.trip-card-dropdown button.text-error:hover {
-  background: var(--error-bg);
+.boarding-delete-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(7, 9, 14, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
 }
 
-.trip-card-body {
+.boarding-delete-btn:hover {
+  background: var(--accent-rose);
+  color: #ffffff;
+}
+
+.boarding-pass-body {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
   flex: 1;
+}
+
+.boarding-pass-title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+  line-height: 1.3;
+}
+
+.boarding-meta-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-4);
+}
+
+.boarding-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.boarding-meta-row svg {
+  color: var(--text-muted);
+}
+
+.boarding-pass-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+  margin-top: auto;
+}
+
+.boarding-budget-box {
   display: flex;
   flex-direction: column;
 }
 
-.trip-card-details {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-2);
+.budget-box-label {
+  font-size: 9px;
+  font-weight: var(--weight-bold);
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
 }
 
-.trip-card-detail {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: var(--text-xs);
-  color: var(--neutral-600);
-}
-
-.trip-card-detail svg {
-  color: var(--neutral-400);
-  flex-shrink: 0;
-}
-
-.trip-card-progress {
-  margin-top: auto;
-}
-
-.trip-card-progress-header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  color: var(--neutral-500);
-  margin-bottom: 4px;
-}
-
-.trip-card-footer {
-  background: var(--neutral-50);
-  border-top: 1px solid var(--neutral-200);
-}
-
-/* Status Badges */
-.badge {
-  font-size: 11px;
-  font-weight: 800;
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.status-ongoing {
-  background: #ecfdf5;
-  color: #047857;
-  border: 1px solid #a7f3d0;
-}
-
-.status-upcoming {
-  background: #eff6ff;
-  color: #1d4ed8;
-  border: 1px solid #bfdbfe;
-}
-
-.status-completed {
-  background: #f3f4f6;
-  color: #374151;
-  border: 1px solid #e5e7eb;
-}
-
-.status-draft {
-  background: #fffbeb;
-  color: #b45309;
-  border: 1px solid #fde68a;
-}
-
-@media (max-width: 768px) {
-  .trips-header {
-    flex-direction: column;
-  }
-  .screen6-pills-group {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .control-pill-box {
-    justify-content: space-between;
-  }
-  .trips-grid {
-    grid-template-columns: 1fr;
-  }
+.budget-box-val {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-extrabold);
+  color: var(--accent-emerald);
 }

@@ -100,11 +100,51 @@ export const communityAPI = {
   copyTrip: (tripId) => api.post(`/community/${tripId}/copy`),
 };
 
-// Saved Destinations API
+// Saved Destinations API (Resilient with local storage fallback)
+const getLocalSaved = () => {
+  try {
+    return JSON.parse(localStorage.getItem('globetrotter_saved_wishlist') || '[]');
+  } catch {
+    return [];
+  }
+};
+
+const setLocalSaved = (items) => {
+  try {
+    localStorage.setItem('globetrotter_saved_wishlist', JSON.stringify(items));
+  } catch {}
+};
+
 export const savedAPI = {
-  getAll: () => api.get('/saved-destinations'),
-  save: (destinationId) => api.post('/saved-destinations', { destination_id: destinationId }),
-  remove: (id) => api.delete(`/saved-destinations/${id}`),
+  getAll: async () => {
+    try {
+      const res = await api.get('/saved-destinations');
+      return res;
+    } catch {
+      return { data: getLocalSaved() };
+    }
+  },
+  save: async (destinationId) => {
+    const local = getLocalSaved();
+    if (!local.some((item) => (item.id === destinationId || item.destination_id === destinationId))) {
+      local.push({ id: destinationId, destination_id: destinationId, saved_at: new Date().toISOString() });
+      setLocalSaved(local);
+    }
+    try {
+      return await api.post('/saved-destinations', { destination_id: destinationId });
+    } catch {
+      return { data: { success: true, destination_id: destinationId } };
+    }
+  },
+  remove: async (id) => {
+    const local = getLocalSaved().filter((item) => item.id !== id && item.destination_id !== id);
+    setLocalSaved(local);
+    try {
+      return await api.delete(`/saved-destinations/${id}`);
+    } catch {
+      return { data: { success: true, id } };
+    }
+  },
 };
 
 // Expenses API

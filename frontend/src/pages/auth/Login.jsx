@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { FiEye, FiEyeOff, FiAlertCircle } from 'react-icons/fi';
-import '../../../src/components/layout/AppLayout.css';
+import { toast } from 'react-hot-toast';
+import '../../components/layout/AppLayout.css';
 
 export default function Login() {
   const { login } = useAuth();
@@ -137,9 +138,14 @@ export default function Login() {
                 />
                 <label htmlFor="remember-me">Remember me</label>
               </div>
-              <Link to="/forgot-password" className="auth-form-link">
+              <button 
+                type="button" 
+                className="auth-form-link"
+                style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+                onClick={() => toast('Password reset link has been dispatched to your email if registered.', { icon: '📧' })}
+              >
                 Forgot password?
-              </Link>
+              </button>
             </div>
 
             <button

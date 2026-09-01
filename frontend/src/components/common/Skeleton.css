@@ -1,0 +1,63 @@
+/* ============================================
+   Skeleton Shimmer Styles (Dark SaaS Theme)
+   ============================================ */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-surface-2) 25%,
+    var(--bg-surface-3) 50%,
+    var(--bg-surface-2) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite ease-in-out;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-text {
+  height: 0.875rem;
+  margin-bottom: var(--space-2);
+}
+
+.skeleton-title {
+  height: 1.25rem;
+  width: 60%;
+  margin-bottom: var(--space-3);
+}
+
+.skeleton-rect {
+  height: 180px;
+  width: 100%;
+  border-radius: var(--radius-md);
+}
+
+.skeleton-circle {
+  border-radius: var(--radius-full);
+}
+
+.skeleton-card {
+  background: var(--bg-surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-6);
+  width: 100%;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

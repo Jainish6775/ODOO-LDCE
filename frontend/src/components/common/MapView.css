@@ -1,16 +1,31 @@
-/* MapView Visualizer Styles */
+/* ============================================
+   Interactive Route Map Styles (Dark SaaS Theme)
+   ============================================ */
+
 .map-view-container {
-  width: 100%;
   display: flex;
   flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.empty-map-state {
+  background: var(--bg-surface-2);
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
 }
 
 .route-canvas-box {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  border-radius: var(--radius-xl);
-  padding: 16px;
-  color: white;
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.15);
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
   position: relative;
   overflow: hidden;
 }
@@ -19,24 +34,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-4);
 }
 
 .route-live-badge {
-  background: rgba(255, 255, 255, 0.15);
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
   font-size: 11px;
-  font-weight: 700;
-  backdrop-filter: blur(4px);
+  font-weight: var(--weight-bold);
+  color: var(--primary-400);
+  background: var(--primary-100);
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
 }
 
 .route-subtitle {
-  color: #94a3b8;
-  max-width: 150px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
 }
 
 .route-svg-wrapper {
@@ -44,104 +56,110 @@
   height: 90px;
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
 .route-svg-line {
   position: absolute;
+  inset: 0;
   width: 100%;
-  height: 60px;
-  top: 15px;
-  z-index: 1;
+  height: 100%;
 }
 
 .route-nodes-row {
   position: relative;
-  z-index: 2;
+  z-index: 5;
   display: flex;
   justify-content: space-around;
   width: 100%;
-  padding: 0 12px;
+  padding: 0 var(--space-4);
 }
 
 .route-node-pin {
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: #334155;
-  border: 2px solid #64748b;
-  color: white;
-  font-weight: 700;
-  font-size: 13px;
+  background: var(--bg-surface-3);
+  border: 2px solid var(--border-hover);
+  color: var(--text-primary);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   position: relative;
-  transition: all 200ms ease;
+  transition: all var(--transition-fast);
+}
+
+.route-node-pin:hover {
+  border-color: var(--primary-400);
+  transform: scale(1.1);
 }
 
 .route-node-pin.active {
   background: var(--primary-500);
   border-color: #ffffff;
-  transform: scale(1.15);
-  box-shadow: 0 0 16px rgba(32, 201, 151, 0.6);
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
 }
 
 .route-stops-feed {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  max-height: 240px;
+  gap: var(--space-2);
+  max-height: 220px;
   overflow-y: auto;
 }
 
 .route-leg-card {
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: var(--neutral-0);
-  border: 1px solid var(--neutral-200);
-  border-radius: var(--radius-lg);
-  padding: 10px 14px;
+  gap: var(--space-3);
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
   cursor: pointer;
-  transition: all 150ms ease;
+  transition: all var(--transition-fast);
 }
 
-.route-leg-card:hover,
+.route-leg-card:hover {
+  background: var(--bg-surface-3);
+  border-color: var(--border-hover);
+}
+
 .route-leg-card.active-leg {
   border-color: var(--primary-500);
-  background: var(--primary-50);
-  box-shadow: var(--shadow-sm);
+  background: rgba(59, 130, 246, 0.08);
 }
 
 .leg-badge {
-  background: var(--primary-100);
-  color: var(--primary-800);
   font-size: 10px;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: var(--radius-md);
-  white-space: nowrap;
+  font-weight: var(--weight-bold);
+  background: var(--bg-surface-3);
+  color: var(--text-secondary);
+  padding: 3px 6px;
+  border-radius: var(--radius-xs);
+  text-transform: uppercase;
+}
+
+.leg-info {
+  flex: 1;
+  min-width: 0;
 }
 
 .leg-title {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--neutral-900);
-  line-height: 1.2;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .leg-meta-row {
   display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.leg-meta {
+  gap: var(--space-3);
   font-size: 11px;
-  color: var(--neutral-500);
-  display: flex;
-  align-items: center;
-  gap: 2px;
+  color: var(--text-muted);
 }

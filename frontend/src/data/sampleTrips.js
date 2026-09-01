@@ -1,0 +1,277 @@
+// Shared sample and fallback datasets for GlobeTrotter
+
+export const defaultRegions = [
+  { name: 'Europe', image: '/images/region_europe_1787378498140.jpg', description: 'Historic landmarks & romantic cities' },
+  { name: 'Asia', image: '/images/region_asia_1787378514027.jpg', description: 'Rich cultures & incredible cuisine' },
+  { name: 'Americas', image: '/images/trip_tokyo_1787378579161.jpg', description: 'Vast national parks & iconic skylines' },
+  { name: 'Africa', image: '/images/trip_bali_1787378598373.jpg', description: 'Wildlife safaris & ancient wonders' },
+  { name: 'Oceania', image: '/images/trip_paris_1787378563287.jpg', description: 'Tropical beaches & natural beauty' },
+];
+
+export const sampleTrips = [
+  {
+    id: 101,
+    name: 'Goa Coastal Resort & Beach Retreat',
+    starting_location: 'Goa, India',
+    start_date: '2026-08-20',
+    end_date: '2026-08-28',
+    duration_days: 8,
+    budget: 50000,
+    status: 'Ongoing',
+    progress: 75,
+    cover_image: '/images/trip_bali_1787378598373.jpg',
+    color: '#10b981',
+    spent: 37500,
+  },
+  {
+    id: 105,
+    name: 'Swiss Alps Winter Skiing & Glacier Express',
+    starting_location: 'Zermatt, Switzerland',
+    start_date: '2026-08-15',
+    end_date: '2026-08-25',
+    duration_days: 10,
+    budget: 4500,
+    status: 'Ongoing',
+    progress: 90,
+    cover_image: '/images/region_europe_1787378498140.jpg',
+    color: '#3b82f6',
+    spent: 4050,
+  },
+  {
+    id: 102,
+    name: 'Paris & Louvre Museum Tour',
+    starting_location: 'Paris, France',
+    start_date: '2026-10-10',
+    end_date: '2026-10-18',
+    duration_days: 8,
+    budget: 3500,
+    status: 'Up-coming',
+    progress: 40,
+    cover_image: '/images/trip_paris_1787378563287.jpg',
+    color: '#8b5cf6',
+    spent: 1400,
+  },
+  {
+    id: 103,
+    name: 'Tokyo Sightseeing & Mount Fuji Expedition',
+    starting_location: 'Tokyo, Japan',
+    start_date: '2026-11-01',
+    end_date: '2026-11-10',
+    duration_days: 10,
+    budget: 4200,
+    status: 'Up-coming',
+    progress: 20,
+    cover_image: '/images/trip_tokyo_1787378579161.jpg',
+    color: '#ec4899',
+    spent: 840,
+  },
+  {
+    id: 104,
+    name: 'Kyoto Ancient Shrines & Tea Experience',
+    starting_location: 'Kyoto, Japan',
+    start_date: '2026-05-10',
+    end_date: '2026-05-16',
+    duration_days: 6,
+    budget: 2800,
+    status: 'Completed',
+    progress: 100,
+    cover_image: '/images/region_asia_1787378514027.jpg',
+    color: '#64748b',
+    spent: 2800,
+  },
+  {
+    id: 106,
+    name: 'Rome Historic Colosseum & Vatican Tour',
+    starting_location: 'Rome, Italy',
+    start_date: '2026-03-12',
+    end_date: '2026-03-19',
+    duration_days: 7,
+    budget: 3100,
+    status: 'Completed',
+    progress: 100,
+    cover_image: '/images/dashboard_banner_1787378478140.jpg',
+    color: '#f59e0b',
+    spent: 3100,
+  },
+  {
+    id: 107,
+    name: 'Bali Tropical Island & Temple Trail',
+    starting_location: 'Ubud, Bali',
+    start_date: '2026-01-05',
+    end_date: '2026-01-14',
+    duration_days: 9,
+    budget: 2200,
+    status: 'Completed',
+    progress: 100,
+    cover_image: '/images/trip_bali_1787378598373.jpg',
+    color: '#06b6d4',
+    spent: 2200,
+  }
+];
+
+export const sampleTripDetailsMap = {
+  101: {
+    id: 101,
+    name: 'Goa Coastal Resort & Beach Retreat',
+    starting_location: 'Goa, India',
+    start_date: '2026-08-18',
+    end_date: '2026-08-26',
+    budget: 50000,
+    status: 'Ongoing',
+    cover_image: '/images/trip_bali_1787378598373.jpg',
+    spent: 37500,
+    description: 'Relaxing beach holiday exploring North Goa beaches, Portuguese architecture in Old Goa, and spice plantations.',
+  },
+  105: {
+    id: 105,
+    name: 'Swiss Alps Winter Skiing & Glacier Express',
+    starting_location: 'Zermatt, Switzerland',
+    start_date: '2026-08-15',
+    end_date: '2026-08-25',
+    budget: 4500,
+    status: 'Ongoing',
+    cover_image: '/images/region_europe_1787378498140.jpg',
+    spent: 4050,
+    description: 'Alpine adventure through Zurich, Glacier Express panoramic train, and Matterhorn glacier skiing in Zermatt.',
+  },
+  102: {
+    id: 102,
+    name: 'Paris & Louvre Museum Tour',
+    starting_location: 'Paris, France',
+    start_date: '2026-10-10',
+    end_date: '2026-10-18',
+    budget: 3500,
+    status: 'Up-coming',
+    cover_image: '/images/trip_paris_1787378563287.jpg',
+    spent: 1400,
+    description: 'Romantic art and culinary tour featuring the Louvre, Eiffel Tower summit, and Seine river cruise.',
+  },
+  103: {
+    id: 103,
+    name: 'Tokyo Sightseeing & Mount Fuji Expedition',
+    starting_location: 'Tokyo, Japan',
+    start_date: '2026-11-01',
+    end_date: '2026-11-10',
+    budget: 4200,
+    status: 'Up-coming',
+    cover_image: '/images/trip_tokyo_1787378579161.jpg',
+    spent: 840,
+    description: 'Ultra-modern Tokyo exploration, Shibuya Crossing, Akihabara, and Mount Fuji lake day trip.',
+  },
+  104: {
+    id: 104,
+    name: 'Kyoto Ancient Shrines & Tea Experience',
+    starting_location: 'Kyoto, Japan',
+    start_date: '2026-05-10',
+    end_date: '2026-05-16',
+    budget: 2800,
+    status: 'Completed',
+    cover_image: '/images/region_asia_1787378514027.jpg',
+    spent: 2800,
+    description: 'Serene exploration of Fushimi Inari, Arashiyama bamboo forest, and traditional Gion tea ceremonies.',
+  },
+  106: {
+    id: 106,
+    name: 'Rome Historic Colosseum & Vatican Tour',
+    starting_location: 'Rome, Italy',
+    start_date: '2026-03-12',
+    end_date: '2026-03-19',
+    budget: 3100,
+    status: 'Completed',
+    cover_image: '/images/dashboard_banner_1787378478140.jpg',
+    spent: 3100,
+    description: 'Historical tour across ancient Rome: Colosseum, Vatican Museums, Sistine Chapel, and pasta masterclasses.',
+  },
+  107: {
+    id: 107,
+    name: 'Bali Tropical Island & Temple Trail',
+    starting_location: 'Ubud, Bali',
+    start_date: '2026-01-05',
+    end_date: '2026-01-14',
+    budget: 2200,
+    status: 'Completed',
+    cover_image: '/images/trip_bali_1787378598373.jpg',
+    spent: 2200,
+    description: 'Rice terrace walks in Ubud, Mount Batur sunrise hike, and Nusa Penida island speedboat tours.',
+  }
+};
+
+export const sampleItinerarySectionsMap = {
+  105: [
+    {
+      id: 'sec-105-1',
+      number: 1,
+      title: 'Flight to Zurich & Glacier Express',
+      type: 'travel',
+      description: 'Swiss Air flight from London to Zurich, followed by first-class Glacier Express train pass to Zermatt.',
+      startDate: '2026-08-15',
+      endDate: '2026-08-16',
+      budget: 1200,
+      items: [
+        { id: 501, name: 'Swiss Air International Flight', type: 'Flight', cost: 850 },
+        { id: 502, name: 'Glacier Express Scenic Train Pass', type: 'Transit', cost: 350 }
+      ]
+    },
+    {
+      id: 'sec-105-2',
+      number: 2,
+      title: 'Zermatt Alpine Chalet & Resort Stay',
+      type: 'hotel',
+      description: '5 nights at luxury Matterhorn View Ski Chalet with daily breakfast, sauna, and ski-in/ski-out access.',
+      startDate: '2026-08-16',
+      endDate: '2026-08-21',
+      budget: 1800,
+      items: [
+        { id: 503, name: 'Matterhorn Alpine Chalet Suite', type: 'Hotel', cost: 1450 },
+        { id: 504, name: 'Resort Spa & Thermal Bath Pass', type: 'Wellness', cost: 350 }
+      ]
+    },
+    {
+      id: 'sec-105-3',
+      number: 3,
+      title: 'Matterhorn Ski Pass & Glacier Paradise',
+      type: 'activity',
+      description: 'Unlimited 4-day Zermatt international ski pass, cable car to Klein Matterhorn, and fondue dinner.',
+      startDate: '2026-08-21',
+      endDate: '2026-08-25',
+      budget: 1050,
+      items: [
+        { id: 505, name: '4-Day International Zermatt Ski Pass', type: 'Sports', cost: 680 },
+        { id: 506, name: 'Gornergrat Bahn Cogwheel Train & Glacier Visit', type: 'Sightseeing', cost: 220 },
+        { id: 507, name: 'Traditional Swiss Cheese Fondue & Wine', type: 'Dining', cost: 150 }
+      ]
+    }
+  ],
+  101: [
+    {
+      id: 'sec-101-1',
+      number: 1,
+      title: 'Flight to Goa & North Coast Beach Resort',
+      type: 'hotel',
+      description: 'Direct flight arrival at MOPA airport followed by 4 nights at Candolim 5-star beachfront resort.',
+      startDate: '2026-08-20',
+      endDate: '2026-08-24',
+      budget: 25000,
+      items: [
+        { id: 601, name: 'Candolim Luxury Beachfront Resort Stay', type: 'Hotel', cost: 18000 },
+        { id: 602, name: 'Airport Private Pickup & Transit', type: 'Transit', cost: 3000 },
+        { id: 603, name: 'Beachside Sunset Dinner at Thalassa', type: 'Dining', cost: 4000 }
+      ]
+    },
+    {
+      id: 'sec-101-2',
+      number: 2,
+      title: 'Water Sports, Fort Aguada & Scuba Diving',
+      type: 'activity',
+      description: 'Jet ski, parasailing at Calangute, scenic heritage walk at Fort Aguada, and Grande Island diving.',
+      startDate: '2026-08-24',
+      endDate: '2026-08-28',
+      budget: 25000,
+      items: [
+        { id: 604, name: 'Grande Island Scuba Diving & Dolphin Safari', type: 'Water Sports', cost: 12000 },
+        { id: 605, name: 'Old Goa UNESCO Cathedrals Guided Tour', type: 'Cultural', cost: 5000 },
+        { id: 606, name: 'Mandovi River Sunset Cruise & Live Folk Music', type: 'Entertainment', cost: 8000 }
+      ]
+    }
+  ]
+};

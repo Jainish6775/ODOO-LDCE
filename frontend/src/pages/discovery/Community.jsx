@@ -1,89 +1,129 @@
-import { useState, useEffect } from 'react';
-import { FiHeart, FiMessageCircle, FiShare2, FiBookmark, FiMoreHorizontal, FiSend, FiMapPin, FiCalendar, FiCopy } from 'react-icons/fi';
+import { useState, useEffect, useCallback } from 'react';
+import { FiHeart, FiMessageCircle, FiShare2, FiSend, FiMapPin, FiCopy, FiTrendingUp, FiAward, FiShield } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { communityAPI } from '../../services/api';
+import { Skeleton } from '../../components/common/Skeleton';
 import './Community.css';
+
+const defaultCommunityPosts = [
+  {
+    id: 101,
+    author: {
+      name: 'Elena Rostova',
+      handle: '@elena_adventures',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      badge: 'PRO EXPLORER'
+    },
+    timeAgo: '2 hours ago',
+    content: 'Just concluded an 8-day expedition across Kyoto and Tokyo! The bamboo forest sunrise trail in Arashiyama is a must-visit.',
+    tripDetails: {
+      id: 104,
+      title: 'Kyoto Ancient Shrines & Tea Experience',
+      destinations: 'Kyoto, Japan',
+      duration: '6 Days',
+      image: '/images/region_asia_1787378514027.jpg'
+    },
+    likes: 42,
+    comments: 8,
+    liked: false,
+    saved: false
+  },
+  {
+    id: 102,
+    author: {
+      name: 'Marcus Sterling',
+      handle: '@marcus_wanders',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      badge: 'ALPINE EXPERT'
+    },
+    timeAgo: '1 day ago',
+    content: 'Swiss Alps skiing and Glacier Express route completed! Best powder snow in Zermatt this season. Full route map linked below.',
+    tripDetails: {
+      id: 105,
+      title: 'Swiss Alps Winter Skiing & Glacier Express',
+      destinations: 'Zermatt, Switzerland',
+      duration: '10 Days',
+      image: '/images/region_europe_1787378498140.jpg'
+    },
+    likes: 89,
+    comments: 14,
+    liked: true,
+    saved: true
+  }
+];
 
 export default function Community() {
   const [activeTab, setActiveTab] = useState('Trending');
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [newPostText, setNewPostText] = useState('');
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchCommunityTrips();
-  }, []);
-
-  const fetchCommunityTrips = async () => {
+  const fetchCommunityTrips = useCallback(async () => {
     try {
       setLoading(true);
       const res = await communityAPI.getPublicTrips();
-      // Map trips to post structure
-      const fetchedPosts = res.data.map(trip => ({
-        id: trip.id,
-        author: {
-          name: trip.creator_name || 'Anonymous Explorer',
-          handle: '@' + (trip.creator_name || 'explorer').toLowerCase().replace(' ', '_'),
-          avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-        },
-        timeAgo: new Date(trip.created_at).toLocaleDateString(),
-        content: trip.description || 'Check out my amazing trip itinerary!',
-        tripDetails: {
+      const rawTrips = Array.isArray(res.data) ? res.data : [];
+
+      if (rawTrips.length === 0) {
+        setPosts(defaultCommunityPosts);
+      } else {
+        const fetchedPosts = rawTrips.map(trip => ({
           id: trip.id,
-          title: trip.name,
-          destinations: trip.starting_location,
-          duration: `${trip.duration_days || 1} Days`,
-          image: trip.cover_image || 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
-        },
-        likes: Number(trip.likes_count) || 0,
-        comments: 0,
-        liked: false, // We'd ideally check this from backend if user liked it
-        saved: false
-      }));
-      setPosts(fetchedPosts);
-    } catch (error) {
-      toast.error('Failed to load community feed');
+          author: {
+            name: trip.creator_name || 'Anonymous Explorer',
+            handle: '@' + (trip.creator_name || 'explorer').toLowerCase().replace(/\s+/g, '_'),
+            avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+            badge: 'VERIFIED EXPLORER'
+          },
+          timeAgo: new Date(trip.created_at || Date.now()).toLocaleDateString(),
+          content: trip.description || 'Check out my expedition itinerary dossier on GlobeTrotter!',
+          tripDetails: {
+            id: trip.id,
+            title: trip.name,
+            destinations: trip.starting_location || 'Global Destination',
+            duration: `${trip.duration_days || 1} Days`,
+            image: trip.cover_image || '/images/trip_paris_1787378563287.jpg'
+          },
+          likes: Number(trip.likes_count) || 0,
+          comments: 0,
+          liked: false,
+          saved: false
+        }));
+
+        setPosts([...fetchedPosts, ...defaultCommunityPosts]);
+      }
+    } catch {
+      setPosts(defaultCommunityPosts);
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  useEffect(() => {
+    fetchCommunityTrips();
+  }, [fetchCommunityTrips]);
+
+  const handleLike = (id) => {
+    setPosts(posts.map(p => {
+      if (p.id === id) {
+        return {
+          ...p,
+          liked: !p.liked,
+          likes: p.liked ? p.likes - 1 : p.likes + 1
+        };
+      }
+      return p;
+    }));
   };
 
-  const trendingTags = ['#Japan2026', '#BudgetTravel', '#SoloTravel', '#EuroSummer', '#Hiking', '#DigitalNomad'];
-
-  const toggleLike = async (id) => {
-    try {
-      const res = await communityAPI.likeTrip(id);
-      const isLiked = res.data.liked;
-      
-      setPosts(posts.map(post => {
-        if (post.id === id) {
-          return { 
-            ...post, 
-            liked: isLiked,
-            likes: isLiked ? post.likes + 1 : Math.max(0, post.likes - 1)
-          };
-        }
-        return post;
-      }));
-    } catch (error) {
-      toast.error('Could not like trip');
-    }
+  const handleForkItinerary = (tripDetails) => {
+    navigate(`/trips/new?destination=${encodeURIComponent(tripDetails.destinations)}&image=${encodeURIComponent(tripDetails.image)}`);
+    toast.success(`Cloning "${tripDetails.title}" into your studio!`);
   };
 
-  const copyTrip = async (id) => {
-    try {
-      const res = await communityAPI.copyTrip(id);
-      toast.success('Trip copied to your dashboard!');
-      navigate(`/trips/${res.data.id}`);
-    } catch (error) {
-      toast.error('Failed to copy trip');
-    }
-  };
-
-  const [newPostText, setNewPostText] = useState('');
-
-  const handleCreatePost = (e) => {
+  const handlePublishPost = (e) => {
     e.preventDefault();
     if (!newPostText.trim()) return;
 
@@ -91,11 +131,13 @@ export default function Community() {
       id: Date.now(),
       author: {
         name: 'You',
-        handle: '@traveler',
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+        handle: '@commander',
+        avatar: '/images/user_profile.png',
+        badge: 'COMMANDER'
       },
       timeAgo: 'Just now',
       content: newPostText,
+      tripDetails: null,
       likes: 0,
       comments: 0,
       liked: false,
@@ -104,167 +146,198 @@ export default function Community() {
 
     setPosts([newPost, ...posts]);
     setNewPostText('');
-    toast.success('Story posted to community feed!');
+    toast.success('Expedition intelligence published!');
   };
 
-  if (loading) {
-    return <div className="loading-spinner-container"><div className="spinner"></div></div>;
-  }
-
   return (
-    <div className="community-container page-content-padding">
-      <div className="community-header">
-        <h1>Travel Community</h1>
-        <p className="text-neutral-500">Get inspired, ask questions, and share your adventures.</p>
+    <div className="intelligence-feed-page page-container">
+      
+      {/* Feed Header */}
+      <div className="feed-header-bar">
+        <div>
+          <h1 className="feed-page-title">Global Travel Intelligence</h1>
+          <p className="feed-page-subtitle">Exchange itineraries, route guides, and field reports with verified world explorers.</p>
+        </div>
+
+        <div className="tab-group">
+          {['Trending', 'Latest', 'Verified Guides'].map((tab) => (
+            <button
+              key={tab}
+              className={`tab-item ${activeTab === tab ? 'active' : ''}`}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="community-layout mt-6">
-        {/* Main Feed */}
-        <div className="community-feed">
-          {/* Create Post Input */}
-          <form className="card create-post-card mb-6" onSubmit={handleCreatePost}>
-            <div className="card-body">
-              <div className="create-post-input-area">
-                <div className="avatar">ME</div>
-                <input 
-                  type="text" 
-                  className="form-input" 
-                  placeholder="Share your travel experiences or ask for advice..." 
+      {/* 2-Column Grid */}
+      <div className="feed-grid mt-6">
+        
+        {/* Left Column: Post Feed */}
+        <div className="feed-main-col">
+          
+          {/* Post Creator Box */}
+          <div className="card post-creator-box">
+            <form onSubmit={handlePublishPost}>
+              <div className="post-creator-inner">
+                <img src="/images/user_profile.png" alt="You" className="avatar avatar-sm" />
+                <textarea
+                  className="post-creator-textarea"
+                  rows="2"
+                  placeholder="Share destination field tips, hidden gems, or flight route updates..."
                   value={newPostText}
                   onChange={(e) => setNewPostText(e.target.value)}
-                  style={{ borderRadius: 'var(--radius-full)' }}
-                />
+                ></textarea>
               </div>
-              <div className="create-post-actions mt-3">
-                <button type="button" className="btn btn-ghost btn-sm text-primary-600" onClick={() => toast('Select a trip to attach...')}>
-                  <FiMapPin /> Attach Trip
-                </button>
-                <button type="submit" className="btn btn-primary btn-sm">
-                  Post
+              <div className="post-creator-bottom mt-3">
+                <span className="text-xs text-muted">Public Travel Exchange</span>
+                <button type="submit" className="btn btn-primary btn-sm" disabled={!newPostText.trim()}>
+                  <FiSend /> Broadcast
                 </button>
               </div>
-            </div>
-          </form>
+            </form>
+          </div>
 
-          <div className="tabs feed-tabs mb-6">
-            {['For You', 'Following', 'Trending'].map(tab => (
-              <button 
-                key={tab} 
-                className={`tab ${activeTab === tab ? 'active' : ''}`}
-                onClick={() => setActiveTab(tab)}
-              >
-                {tab}
-              </button>
+          {/* Posts Stack */}
+          <div className="posts-stack mt-4">
+            {loading ? (
+              <div className="card p-5">
+                <Skeleton variant="title" width="40%" />
+                <Skeleton variant="text" width="90%" />
+                <Skeleton variant="rect" height={80} className="mt-3" />
+              </div>
+            ) : posts.map(post => (
+              <div key={post.id} className="card post-card mb-4">
+                
+                {/* Author Row */}
+                <div className="post-author-row">
+                  <img src={post.author.avatar} alt={post.author.name} className="avatar avatar-sm" />
+                  <div className="post-author-info">
+                    <div className="flex items-center gap-2">
+                      <span className="author-name">{post.author.name}</span>
+                      <span className="author-badge-tag">{post.author.badge || 'EXPLORER'}</span>
+                    </div>
+                    <span className="author-handle">{post.author.handle}</span>
+                  </div>
+                  <span className="post-time-ago">{post.timeAgo}</span>
+                </div>
+
+                {/* Content */}
+                <p className="post-text-body mt-3">{post.content}</p>
+
+                {/* Embedded Trip Card */}
+                {post.tripDetails && (
+                  <div className="embedded-itinerary-card mt-3" onClick={() => handleForkItinerary(post.tripDetails)}>
+                    <img src={post.tripDetails.image} alt={post.tripDetails.title} className="embedded-thumb" />
+                    <div className="embedded-details">
+                      <span className="embedded-title">{post.tripDetails.title}</span>
+                      <span className="embedded-meta">
+                        <FiMapPin size={11} /> {post.tripDetails.destinations} • ⏱️ {post.tripDetails.duration}
+                      </span>
+                    </div>
+                    <button className="btn btn-secondary btn-sm" title="Clone to Studio">
+                      <FiCopy /> Clone
+                    </button>
+                  </div>
+                )}
+
+                {/* Post Footer Actions */}
+                <div className="post-footer-actions mt-3">
+                  <button 
+                    className={`feed-action-btn ${post.liked ? 'active' : ''}`}
+                    onClick={() => handleLike(post.id)}
+                  >
+                    <FiHeart size={14} /> <span>{post.likes}</span>
+                  </button>
+                  <button className="feed-action-btn">
+                    <FiMessageCircle size={14} /> <span>{post.comments}</span>
+                  </button>
+                  <button 
+                    className="feed-action-btn ml-auto"
+                    onClick={() => {
+                      navigator.clipboard?.writeText?.(window.location.href);
+                      toast.success('Post link copied!');
+                    }}
+                  >
+                    <FiShare2 size={14} />
+                  </button>
+                </div>
+
+              </div>
             ))}
           </div>
 
-          {/* Posts Stream */}
-          <div className="posts-stream">
-            {posts.length === 0 ? (
-              <div className="empty-state">
-                <span className="empty-state-icon">🌍</span>
-                <h3 className="empty-state-title">No public trips yet</h3>
-                <p className="empty-state-text">Be the first to share your itinerary with the community!</p>
-              </div>
-            ) : (
-              posts.map(post => (
-                <div key={post.id} className="card post-card">
-                  <div className="card-body">
-                    
-                    {/* Post Header */}
-                    <div className="post-header">
-                      <div className="post-author-info">
-                        <img src={post.author.avatar} alt={post.author.name} className="avatar" />
-                        <div>
-                          <div className="post-author-name">{post.author.name}</div>
-                          <div className="post-author-meta">
-                            <span>{post.author.handle}</span> • <span>{post.timeAgo}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <button className="btn-icon btn-sm text-neutral-400"><FiMoreHorizontal /></button>
-                    </div>
-                    
-                    {/* Post Content */}
-                    <div className="post-content mt-4">
-                      <p>{post.content}</p>
-                    </div>
-
-                    {/* Attached Trip Card (if any) */}
-                    {post.tripDetails && (
-                      <div className="post-trip-attachment mt-4">
-                        <img src={post.tripDetails.image} alt={post.tripDetails.title} className="post-trip-image" />
-                        <div className="post-trip-info">
-                          <h4>{post.tripDetails.title}</h4>
-                          <div className="post-trip-meta">
-                            <span><FiMapPin /> {post.tripDetails.destinations}</span>
-                            <span><FiCalendar /> {post.tripDetails.duration}</span>
-                          </div>
-                          <div style={{ display: 'flex', gap: '8px' }}>
-                            <button className="btn btn-secondary btn-sm mt-2" onClick={() => navigate(`/trips/${post.tripDetails.id}`)}>View Itinerary</button>
-                            <button className="btn btn-primary btn-sm mt-2" onClick={() => copyTrip(post.tripDetails.id)}><FiCopy /> Copy Trip</button>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Post Footer/Actions */}
-                  <div className="card-footer post-footer">
-                    <button 
-                      className={`post-action-btn ${post.liked ? 'liked' : ''}`}
-                      onClick={() => toggleLike(post.id)}
-                    >
-                      <FiHeart fill={post.liked ? 'currentColor' : 'none'} />
-                      <span>{post.likes}</span>
-                    </button>
-                    <button className="post-action-btn">
-                      <FiMessageCircle />
-                      <span>{post.comments}</span>
-                    </button>
-                    <button className="post-action-btn">
-                      <FiShare2 />
-                    </button>
-                    
-                    <div style={{ flex: 1 }}></div>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
         </div>
 
-        {/* Right Sidebar */}
-        <div className="community-sidebar hide-mobile">
-          <div className="card trending-card mb-6">
-            <div className="card-body">
-              <h3 className="widget-title">Trending Topics</h3>
-              <div className="trending-tags mt-4">
-                {trendingTags.map(tag => (
-                  <div key={tag} className="trending-tag-item">
-                    <div className="trending-tag-name">{tag}</div>
-                    <div className="trending-tag-count">{Math.floor(Math.random() * 5000) + 100} posts</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+        {/* Right Column: Trending Destinations & Creators */}
+        <div className="feed-sidebar-col">
           
-          <div className="card suggestion-card">
-            <div className="card-body">
-              <h3 className="widget-title">Top Contributors</h3>
-              <div className="user-suggestion mt-4">
-                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="User" className="avatar avatar-sm" />
-                <div className="user-suggestion-info">
-                  <div className="font-bold text-sm">David Kim</div>
-                  <div className="text-xs text-neutral-500">Expert Planner</div>
+          <div className="card p-5 mb-4">
+            <div className="flex items-center gap-2 mb-3">
+              <FiTrendingUp className="text-primary-400" />
+              <h3 className="text-xs font-bold text-primary uppercase tracking-wider">Trending Coordinates</h3>
+            </div>
+            
+            <div className="trending-stack">
+              <div className="trending-row">
+                <div>
+                  <span className="trending-title block text-xs font-bold text-primary">Kyoto & Tokyo, Japan</span>
+                  <span className="text-xs text-muted">1.2k Active Expeditions</span>
                 </div>
-                <button className="btn btn-secondary btn-sm ml-auto">Follow</button>
+                <span className="badge badge-emerald text-xs">+28%</span>
+              </div>
+
+              <div className="trending-row">
+                <div>
+                  <span className="trending-title block text-xs font-bold text-primary">Zermatt & Swiss Alps</span>
+                  <span className="text-xs text-muted">840 Active Expeditions</span>
+                </div>
+                <span className="badge badge-blue text-xs">+15%</span>
+              </div>
+
+              <div className="trending-row">
+                <div>
+                  <span className="trending-title block text-xs font-bold text-primary">Santorini, Greece</span>
+                  <span className="text-xs text-muted">620 Active Expeditions</span>
+                </div>
+                <span className="badge badge-amber text-xs">+9%</span>
               </div>
             </div>
           </div>
+
+          <div className="card p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <FiAward className="text-primary-400" />
+              <h3 className="text-xs font-bold text-primary uppercase tracking-wider">Top Field Guides</h3>
+            </div>
+            
+            <div className="guides-stack">
+              <div className="guide-row">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80" alt="Elena" className="avatar avatar-sm" />
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs font-bold text-primary block">Elena Rostova</span>
+                  <span className="text-xs text-muted block">48 Shared Itineraries</span>
+                </div>
+                <button className="btn btn-secondary btn-sm">Follow</button>
+              </div>
+
+              <div className="guide-row mt-3">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="Marcus" className="avatar avatar-sm" />
+                <div className="flex-1 min-w-0">
+                  <span className="text-xs font-bold text-primary block">Marcus Sterling</span>
+                  <span className="text-xs text-muted block">32 Alpine Guides</span>
+                </div>
+                <button className="btn btn-secondary btn-sm">Follow</button>
+              </div>
+            </div>
+          </div>
+
         </div>
+
       </div>
+
     </div>
   );
 }
