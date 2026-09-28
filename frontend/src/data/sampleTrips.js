@@ -1,4 +1,4 @@
-// Shared sample and fallback datasets for GlobeTrotter
+// Shared sample and fallback datasets for Wayfare OS
 
 export const defaultRegions = [
   { name: 'Europe', image: '/images/region_europe_1787378498140.jpg', description: 'Historic landmarks & romantic cities' },

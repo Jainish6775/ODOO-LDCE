@@ -1,16 +1,41 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { authAPI } from '../../services/api';
+import { useAuth } from '../../contexts/AuthContext';
+import { 
+  FiEye, 
+  FiEyeOff, 
+  FiAlertCircle, 
+  FiCheck, 
+  FiMail, 
+  FiLock, 
+  FiUser, 
+  FiPhone, 
+  FiGlobe, 
+  FiMapPin, 
+  FiArrowRight, 
+  FiArrowLeft,
+  FiShield,
+  FiChevronDown,
+  FiChevronUp
+} from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
-import { FiEye, FiEyeOff, FiAlertCircle, FiCheck } from 'react-icons/fi';
-import '../../components/layout/AppLayout.css';
+import './Auth.css';
 
 const TRAVEL_INTERESTS = [
-  'Adventure', 'Cultural', 'Relaxation', 'Budget', 'Luxury',
-  'Foodie', 'Nature', 'Nightlife', 'Photography', 'History',
+  { label: 'Adventure', icon: '⛰️' },
+  { label: 'Cultural', icon: '🏛️' },
+  { label: 'Relaxation', icon: '🧘' },
+  { label: 'Budget', icon: '💰' },
+  { label: 'Luxury', icon: '✨' },
+  { label: 'Foodie', icon: '🍜' },
+  { label: 'Nature', icon: '🌿' },
+  { label: 'Nightlife', icon: '🍸' },
+  { label: 'Photography', icon: '📸' },
+  { label: 'History', icon: '📜' },
 ];
 
 export default function Register() {
+  const { register } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -24,8 +49,9 @@ export default function Register() {
     country: '',
     bio: '',
     interests: [],
-    agreeTerms: false,
+    agreeTerms: true,
   });
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState('');
@@ -45,12 +71,12 @@ export default function Register() {
     if (error) setError('');
   };
 
-  const toggleInterest = (interest) => {
+  const toggleInterest = (interestName) => {
     setFormData((prev) => ({
       ...prev,
-      interests: prev.interests.includes(interest)
-        ? prev.interests.filter((i) => i !== interest)
-        : [...prev.interests, interest],
+      interests: prev.interests.includes(interestName)
+        ? prev.interests.filter((i) => i !== interestName)
+        : [...prev.interests, interestName],
     }));
   };
 
@@ -76,9 +102,9 @@ export default function Register() {
     if (!formData.email.trim()) errors.email = 'Email is required';
     else if (!/\S+@\S+\.\S+/.test(formData.email)) errors.email = 'Invalid email address';
     if (!formData.password) errors.password = 'Password is required';
-    else if (formData.password.length < 6) errors.password = 'Minimum 6 characters';
+    else if (formData.password.length < 6) errors.password = 'Minimum 6 characters required';
     if (formData.password !== formData.confirmPassword) errors.confirmPassword = 'Passwords do not match';
-    if (!formData.agreeTerms) errors.agreeTerms = 'You must agree to the terms';
+    if (!formData.agreeTerms) errors.agreeTerms = 'You must agree to continue';
     return errors;
   };
 
@@ -95,7 +121,7 @@ export default function Register() {
 
     setLoading(true);
     try {
-      await authAPI.register({
+      await register({
         email: formData.email,
         password: formData.password,
         firstName: formData.firstName,
@@ -106,8 +132,8 @@ export default function Register() {
         bio: formData.bio || undefined,
         interests: formData.interests.length > 0 ? formData.interests : undefined,
       });
-      toast.success('Account created successfully! Please sign in.');
-      navigate('/login');
+      toast.success('Account created! Welcome to Wayfare OS.');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.error || 'Registration failed. Please try again.');
     } finally {
@@ -118,245 +144,289 @@ export default function Register() {
   const strength = getPasswordStrength();
 
   return (
-    <div className="auth-layout">
-      {/* Left Hero */}
-      <div className="auth-hero hide-mobile">
-        <div className="auth-hero-content">
-          <div className="auth-hero-badge">
-            <span className="auth-hero-badge-dot"></span>
-            <span>Join GlobeTrotter Today</span>
-          </div>
-          <h1 className="auth-hero-title mt-4">Start Your Adventure</h1>
-          <p className="auth-hero-subtitle">
-            Join thousands of travelers building beautiful itineraries, discovering hidden gems, and sharing journeys.
-          </p>
+    <div className="auth-page-wrapper">
+      
+      {/* Top Navigation */}
+      <header className="auth-top-nav">
+        <Link to="/" className="auth-back-link">
+          <FiArrowLeft size={14} /> Back to Home
+        </Link>
+        <div className="auth-nav-status">
+          <span className="auth-nav-dot"></span>
+          <span>Wayfare OS • v2.4</span>
         </div>
-      </div>
+      </header>
 
-      {/* Right Form */}
-      <div className="auth-form-side">
-        <div className="auth-form-container">
-          <div className="auth-form-logo">
-            <img src="/logo.jpg" alt="GlobeTrotter" style={{ height: '48px', width: '48px', borderRadius: '10px', objectFit: 'cover' }} />
-            <span className="auth-form-logo-text">GlobeTrotter</span>
+      {/* Centered Glassmorphic Card */}
+      <div className="auth-centered-container register-mode">
+        <div className="auth-glass-card">
+          
+          {/* Header */}
+          <div className="auth-card-header">
+            <Link to="/" className="auth-logo-badge">
+              <img src="/logo.jpg" alt="Wayfare" className="auth-logo-img" />
+              <div className="auth-logo-title">
+                Wayfare <span className="auth-os-tag">OS</span>
+              </div>
+            </Link>
+            <h1 className="auth-card-title">Create Account</h1>
+            <p className="auth-card-subtitle">
+              Join thousands of travelers planning, budgeting, and discovering world destinations.
+            </p>
           </div>
 
-          <h2 className="auth-form-title">Create Account</h2>
-          <p className="auth-form-subtitle">Fill in your details to get started</p>
+          {/* Mode Switcher Tabs */}
+          <div className="auth-tabs-row">
+            <Link to="/login" className="auth-tab-btn">
+              Sign In
+            </Link>
+            <button type="button" className="auth-tab-btn active">
+              Create Account
+            </button>
+          </div>
 
+          {/* Error Message */}
           {error && (
             <div className="alert alert-error">
-              <FiAlertCircle />
+              <FiAlertCircle size={16} />
               <span>{error}</span>
             </div>
           )}
 
-          <form className="auth-form" onSubmit={handleSubmit}>
-            {/* Group A: Account Information */}
-            <div className="form-section">
-              <h4 className="form-section-title">Account Information</h4>
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+            
+            {/* Name Row */}
+            <div className="grid-2 gap-3">
+              <div className="form-group">
+                <label className="form-label" htmlFor="reg-first">
+                  First Name <span className="text-error">*</span>
+                </label>
+                <div className="auth-input-wrapper">
+                  <FiUser className="auth-input-icon" size={15} />
+                  <input
+                    id="reg-first"
+                    type="text"
+                    name="firstName"
+                    className={`auth-form-input ${fieldErrors.firstName ? 'error' : ''}`}
+                    placeholder="Alex"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                  />
+                </div>
+                {fieldErrors.firstName && <span className="text-xs text-error mt-1">{fieldErrors.firstName}</span>}
+              </div>
+
+              <div className="form-group">
+                <label className="form-label" htmlFor="reg-last">
+                  Last Name <span className="text-error">*</span>
+                </label>
+                <div className="auth-input-wrapper">
+                  <FiUser className="auth-input-icon" size={15} />
+                  <input
+                    id="reg-last"
+                    type="text"
+                    name="lastName"
+                    className={`auth-form-input ${fieldErrors.lastName ? 'error' : ''}`}
+                    placeholder="Morgan"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                  />
+                </div>
+                {fieldErrors.lastName && <span className="text-xs text-error mt-1">{fieldErrors.lastName}</span>}
+              </div>
             </div>
 
+            {/* Email */}
             <div className="form-group">
               <label className="form-label" htmlFor="reg-email">
-                Email Address <span className="required">*</span>
+                Email Address <span className="text-error">*</span>
               </label>
-              <input
-                id="reg-email"
-                type="email"
-                name="email"
-                className={`form-input ${fieldErrors.email ? 'error' : ''}`}
-                placeholder="you@example.com"
-                value={formData.email}
-                onChange={handleChange}
-                autoComplete="email"
-              />
-              {fieldErrors.email && <span className="form-error"><FiAlertCircle /> {fieldErrors.email}</span>}
+              <div className="auth-input-wrapper">
+                <FiMail className="auth-input-icon" size={15} />
+                <input
+                  id="reg-email"
+                  type="email"
+                  name="email"
+                  className={`auth-form-input ${fieldErrors.email ? 'error' : ''}`}
+                  placeholder="alex@example.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  autoComplete="email"
+                />
+              </div>
+              {fieldErrors.email && <span className="text-xs text-error mt-1">{fieldErrors.email}</span>}
             </div>
 
-            <div className="auth-form-row">
+            {/* Password Row */}
+            <div className="grid-2 gap-3">
               <div className="form-group">
                 <label className="form-label" htmlFor="reg-password">
-                  Password <span className="required">*</span>
+                  Password <span className="text-error">*</span>
                 </label>
-                <div className="input-group">
+                <div className="auth-input-wrapper">
+                  <FiLock className="auth-input-icon" size={15} />
                   <input
                     id="reg-password"
                     type={showPassword ? 'text' : 'password'}
                     name="password"
-                    className={`form-input ${fieldErrors.password ? 'error' : ''}`}
-                    placeholder="Min 6 characters"
+                    className={`auth-form-input ${fieldErrors.password ? 'error' : ''}`}
+                    placeholder="Min 6 chars"
                     value={formData.password}
                     onChange={handleChange}
                     autoComplete="new-password"
                   />
-                  <button type="button" className="input-icon" onClick={() => setShowPassword(!showPassword)} tabIndex={-1}>
-                    {showPassword ? <FiEyeOff /> : <FiEye />}
+                  <button
+                    type="button"
+                    className="auth-pwd-toggle"
+                    onClick={() => setShowPassword(!showPassword)}
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <FiEyeOff size={15} /> : <FiEye size={15} />}
                   </button>
                 </div>
                 {formData.password && (
-                  <>
-                    <div className="password-strength">
-                      {[1, 2, 3].map((i) => (
-                        <div key={i} className={`password-strength-bar ${i <= strength.level ? strength.color : ''}`}></div>
-                      ))}
+                  <div className="pwd-meter-box">
+                    <div className="pwd-meter-bars">
+                      <div className={`pwd-bar ${strength.level >= 1 ? strength.color : ''}`}></div>
+                      <div className={`pwd-bar ${strength.level >= 2 ? strength.color : ''}`}></div>
+                      <div className={`pwd-bar ${strength.level >= 3 ? strength.color : ''}`}></div>
                     </div>
-                    <span className={`form-hint password-strength-text`}>{strength.text}</span>
-                  </>
+                    <span className={`pwd-strength-label ${strength.color}`}>{strength.text}</span>
+                  </div>
                 )}
-                {fieldErrors.password && <span className="form-error"><FiAlertCircle /> {fieldErrors.password}</span>}
+                {fieldErrors.password && <span className="text-xs text-error mt-1">{fieldErrors.password}</span>}
               </div>
 
               <div className="form-group">
                 <label className="form-label" htmlFor="reg-confirm">
-                  Confirm Password <span className="required">*</span>
+                  Confirm Password <span className="text-error">*</span>
                 </label>
-                <div className="input-group">
+                <div className="auth-input-wrapper">
+                  <FiLock className="auth-input-icon" size={15} />
                   <input
                     id="reg-confirm"
                     type={showConfirm ? 'text' : 'password'}
                     name="confirmPassword"
-                    className={`form-input ${fieldErrors.confirmPassword ? 'error' : ''}`}
+                    className={`auth-form-input ${fieldErrors.confirmPassword ? 'error' : ''}`}
                     placeholder="Repeat password"
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     autoComplete="new-password"
                   />
-                  <button type="button" className="input-icon" onClick={() => setShowConfirm(!showConfirm)} tabIndex={-1}>
-                    {showConfirm ? <FiEyeOff /> : <FiEye />}
+                  <button
+                    type="button"
+                    className="auth-pwd-toggle"
+                    onClick={() => setShowConfirm(!showConfirm)}
+                    tabIndex={-1}
+                  >
+                    {showConfirm ? <FiEyeOff size={15} /> : <FiEye size={15} />}
                   </button>
                 </div>
-                {fieldErrors.confirmPassword && <span className="form-error"><FiAlertCircle /> {fieldErrors.confirmPassword}</span>}
+                {fieldErrors.confirmPassword && <span className="text-xs text-error mt-1">{fieldErrors.confirmPassword}</span>}
               </div>
             </div>
 
-            {/* Group B: Personal Information */}
-            <div className="form-section">
-              <h4 className="form-section-title">Personal Information</h4>
-            </div>
-
-            <div className="auth-form-row">
+            {/* Location Row */}
+            <div className="grid-3 gap-3">
               <div className="form-group">
-                <label className="form-label" htmlFor="reg-first">
-                  First Name <span className="required">*</span>
-                </label>
-                <input
-                  id="reg-first"
-                  type="text"
-                  name="firstName"
-                  className={`form-input ${fieldErrors.firstName ? 'error' : ''}`}
-                  placeholder="John"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                />
-                {fieldErrors.firstName && <span className="form-error"><FiAlertCircle /> {fieldErrors.firstName}</span>}
-              </div>
-
-              <div className="form-group">
-                <label className="form-label" htmlFor="reg-last">
-                  Last Name <span className="required">*</span>
-                </label>
-                <input
-                  id="reg-last"
-                  type="text"
-                  name="lastName"
-                  className={`form-input ${fieldErrors.lastName ? 'error' : ''}`}
-                  placeholder="Doe"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                />
-                {fieldErrors.lastName && <span className="form-error"><FiAlertCircle /> {fieldErrors.lastName}</span>}
-              </div>
-            </div>
-
-            <div className="auth-form-row">
-              <div className="form-group">
-                <label className="form-label" htmlFor="reg-phone">Phone Number</label>
-                <input
-                  id="reg-phone"
-                  type="tel"
-                  name="phone"
-                  className="form-input"
-                  placeholder="+91 98765 43210"
-                  value={formData.phone}
-                  onChange={handleChange}
-                />
+                <label className="form-label" htmlFor="reg-phone">Phone</label>
+                <div className="auth-input-wrapper">
+                  <FiPhone className="auth-input-icon" size={14} />
+                  <input
+                    id="reg-phone"
+                    type="tel"
+                    name="phone"
+                    className="auth-form-input"
+                    placeholder="+1 (555)..."
+                    value={formData.phone}
+                    onChange={handleChange}
+                  />
+                </div>
               </div>
 
               <div className="form-group">
                 <label className="form-label" htmlFor="reg-country">Country</label>
-                <input
-                  id="reg-country"
-                  type="text"
-                  name="country"
-                  className="form-input"
-                  placeholder="India"
-                  value={formData.country}
-                  onChange={handleChange}
-                />
+                <div className="auth-input-wrapper">
+                  <FiGlobe className="auth-input-icon" size={14} />
+                  <input
+                    id="reg-country"
+                    type="text"
+                    name="country"
+                    className="auth-form-input"
+                    placeholder="United States"
+                    value={formData.country}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label" htmlFor="reg-city">City</label>
+                <div className="auth-input-wrapper">
+                  <FiMapPin className="auth-input-icon" size={14} />
+                  <input
+                    id="reg-city"
+                    type="text"
+                    name="city"
+                    className="auth-form-input"
+                    placeholder="San Francisco"
+                    value={formData.city}
+                    onChange={handleChange}
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="form-group">
-              <label className="form-label" htmlFor="reg-city">City</label>
-              <input
-                id="reg-city"
-                type="text"
-                name="city"
-                className="form-input"
-                placeholder="Mumbai"
-                value={formData.city}
-                onChange={handleChange}
-              />
+            {/* Travel Passions (Optional Accordion) */}
+            <div>
+              <button
+                type="button"
+                className="auth-accordion-btn"
+                onClick={() => setShowPreferences(!showPreferences)}
+              >
+                {showPreferences ? <FiChevronUp size={14} /> : <FiChevronDown size={14} />}
+                <span>{showPreferences ? 'Hide Travel Preferences' : 'Add Travel Interests & Bio (Optional)'}</span>
+              </button>
             </div>
 
-            {/* Group C: Travel Preferences (collapsible) */}
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm"
-              onClick={() => setShowPreferences(!showPreferences)}
-              style={{ alignSelf: 'flex-start' }}
-            >
-              {showPreferences ? '▾' : '▸'} Travel Preferences (Optional)
-            </button>
-
             {showPreferences && (
-              <>
+              <div className="flex flex-col gap-3 p-3 card" style={{ background: 'rgba(7, 9, 14, 0.6)' }}>
                 <div className="form-group">
-                  <label className="form-label">Travel Interests</label>
-                  <div className="interest-tags">
-                    {TRAVEL_INTERESTS.map((interest) => (
+                  <label className="form-label mb-2">Select Your Travel Passions</label>
+                  <div className="auth-interest-chips">
+                    {TRAVEL_INTERESTS.map((item) => (
                       <button
-                        key={interest}
+                        key={item.label}
                         type="button"
-                        className={`interest-tag ${formData.interests.includes(interest) ? 'selected' : ''}`}
-                        onClick={() => toggleInterest(interest)}
+                        className={`auth-interest-chip ${formData.interests.includes(item.label) ? 'selected' : ''}`}
+                        onClick={() => toggleInterest(item.label)}
                       >
-                        {formData.interests.includes(interest) && <FiCheck />}
-                        {interest}
+                        <span>{item.icon}</span>
+                        <span>{item.label}</span>
+                        {formData.interests.includes(item.label) && <FiCheck size={11} className="text-primary-400" />}
                       </button>
                     ))}
                   </div>
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label" htmlFor="reg-bio">Short Bio</label>
+                  <label className="form-label" htmlFor="reg-bio">Short Explorer Bio</label>
                   <textarea
                     id="reg-bio"
                     name="bio"
-                    className="form-input form-textarea"
-                    placeholder="Tell us a bit about yourself and your travel style..."
+                    className="auth-form-input"
+                    style={{ height: '65px', resize: 'vertical' }}
+                    placeholder="Share a few words about your travel style..."
                     value={formData.bio}
                     onChange={handleChange}
-                    rows={3}
                   />
                 </div>
-              </>
+              </div>
             )}
 
-            {/* Agreement */}
+            {/* Agreement Checkbox */}
             <div className="form-group">
-              <div className="checkbox-group">
+              <label className="checkbox-group cursor-pointer">
                 <input
                   type="checkbox"
                   id="agree-terms"
@@ -364,63 +434,44 @@ export default function Register() {
                   checked={formData.agreeTerms}
                   onChange={handleChange}
                 />
-                <label htmlFor="agree-terms">
-                  I agree to the <a href="#terms" className="auth-form-link">Terms of Service</a> and{' '}
-                  <a href="#privacy" className="auth-form-link">Privacy Policy</a>
-                </label>
-              </div>
-              {fieldErrors.agreeTerms && <span className="form-error"><FiAlertCircle /> {fieldErrors.agreeTerms}</span>}
+                <span className="text-xs text-secondary">
+                  I agree to the <a href="#terms" className="text-primary-400 underline">Terms</a> and <a href="#privacy" className="text-primary-400 underline">Privacy Policy</a>
+                </span>
+              </label>
+              {fieldErrors.agreeTerms && <span className="text-xs text-error mt-1">{fieldErrors.agreeTerms}</span>}
             </div>
 
+            {/* Submit */}
             <button
               type="submit"
               className="btn btn-primary btn-lg btn-full"
               disabled={loading}
+              style={{ marginTop: 'var(--space-1)' }}
             >
-              {loading ? <span className="spinner"></span> : null}
-              {loading ? 'Creating Account...' : 'Create Account'}
+              {loading ? (
+                <span className="spinner"></span>
+              ) : (
+                <>
+                  Create Account & Launch <FiArrowRight size={16} />
+                </>
+              )}
             </button>
           </form>
 
-          <p className="auth-form-footer">
-            Already have an account? <Link to="/login">Sign in</Link>
-          </p>
+          {/* Footer */}
+          <div className="auth-card-footer">
+            <div className="text-xs text-muted">
+              Already have an account? <Link to="/login" className="text-primary-400 font-bold hover:underline">Sign in</Link>
+            </div>
+            <div className="auth-security-badge">
+              <FiShield size={12} className="text-primary-400" />
+              <span>256-bit SSL encrypted • Private & Secure</span>
+            </div>
+          </div>
+
         </div>
       </div>
 
-      <style>{`
-        .interest-tags {
-          display: flex;
-          flex-wrap: wrap;
-          gap: var(--space-2);
-        }
-
-        .interest-tag {
-          display: inline-flex;
-          align-items: center;
-          gap: var(--space-1);
-          padding: var(--space-2) var(--space-3);
-          font-size: var(--text-sm);
-          font-weight: var(--weight-medium);
-          border: 2px solid var(--neutral-200);
-          border-radius: var(--radius-full);
-          background: var(--neutral-0);
-          color: var(--neutral-600);
-          cursor: pointer;
-          transition: all var(--transition-fast);
-        }
-
-        .interest-tag:hover {
-          border-color: var(--primary-300);
-          color: var(--primary-700);
-        }
-
-        .interest-tag.selected {
-          background: var(--primary-50);
-          border-color: var(--primary-400);
-          color: var(--primary-700);
-        }
-      `}</style>
     </div>
   );
 }

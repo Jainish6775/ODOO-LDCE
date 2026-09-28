@@ -1,47 +1,47 @@
 /* ==========================================================================
-   GlobeTrotter Ultra-Premium Design Tokens (Travel Operating System)
+   Wayfare OS Ultra-Premium Design Tokens (Travel Operating System)
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
-  /* Surface & Canvas Hierarchy */
-  --bg-canvas: #07090e;        /* Deep Space Obsidian Canvas */
-  --bg-surface-0: #0b0f19;      /* Sidebar & Structural Panels */
-  --bg-surface-1: #101626;      /* Primary SaaS Cards & Containers */
-  --bg-surface-2: #161e33;      /* Elevated Widgets & Form Controls */
-  --bg-surface-3: #1e2842;      /* Popovers, Dropdowns, Card Hover */
-  --bg-surface-hover: #263354;  /* Active hover state */
+  /* Surface & Canvas Hierarchy (Clean Apple/Airbnb Light Theme) */
+  --bg-canvas: #f8fafc;        /* Soft Crisp Porcelain Canvas */
+  --bg-surface-0: #f1f5f9;      /* Structural Panels */
+  --bg-surface-1: #ffffff;      /* Pure White Cards & Containers */
+  --bg-surface-2: #f8fafc;      /* Inset Panels & Form Controls */
+  --bg-surface-3: #f1f5f9;      /* Popovers, Dropdowns, Hover Panels */
+  --bg-surface-hover: #e2e8f0;  /* Active hover state */
 
-  /* Legacy mappings */
-  --neutral-0: #101626;
-  --neutral-50: #0b0f19;
-  --neutral-100: #101626;
-  --neutral-200: rgba(255, 255, 255, 0.08);
-  --neutral-300: rgba(255, 255, 255, 0.14);
-  --neutral-400: #64748b;
-  --neutral-500: #94a3b8;
-  --neutral-600: #cbd5e1;
-  --neutral-700: #e2e8f0;
-  --neutral-800: #f1f5f9;
-  --neutral-900: #f8fafc;
+  /* Neutral mappings */
+  --neutral-0: #ffffff;
+  --neutral-50: #f8fafc;
+  --neutral-100: #f1f5f9;
+  --neutral-200: #e2e8f0;
+  --neutral-300: #cbd5e1;
+  --neutral-400: #94a3b8;
+  --neutral-500: #64748b;
+  --neutral-600: #475569;
+  --neutral-700: #334155;
+  --neutral-800: #1e293b;
+  --neutral-900: #0f172a;
 
   /* Typography Colors */
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --text-inverse: #07090e;
+  --text-primary: #0f172a;      /* Deep Slate 900 */
+  --text-secondary: #475569;    /* Slate 600 */
+  --text-muted: #94a3b8;        /* Slate 400 */
+  --text-inverse: #ffffff;
 
-  /* Hairline Borders */
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-medium: rgba(255, 255, 255, 0.15);
-  --border-hover: rgba(255, 255, 255, 0.28);
+  /* Clean Borders */
+  --border-subtle: #e2e8f0;
+  --border-medium: #cbd5e1;
+  --border-hover: #94a3b8;
   --border-focus: #3b82f6;
 
   /* Brand Accents — Electric Azure & Sapphire */
-  --primary-50: rgba(59, 130, 246, 0.08);
-  --primary-100: rgba(59, 130, 246, 0.16);
-  --primary-200: rgba(59, 130, 246, 0.30);
+  --primary-50: #eff6ff;
+  --primary-100: #dbeafe;
+  --primary-200: #bfdbfe;
   --primary-300: #93c5fd;
   --primary-400: #60a5fa;
   --primary-500: #3b82f6;
@@ -50,15 +50,15 @@
 
   /* Semantic Accents */
   --accent-emerald: #10b981;
-  --accent-emerald-bg: rgba(16, 185, 129, 0.12);
+  --accent-emerald-bg: #ecfdf5;
   --accent-amber: #f59e0b;
-  --accent-amber-bg: rgba(245, 158, 11, 0.12);
+  --accent-amber-bg: #fffbeb;
   --accent-rose: #f43f5e;
-  --accent-rose-bg: rgba(244, 63, 94, 0.12);
-  --accent-purple: #a855f7;
-  --accent-purple-bg: rgba(168, 85, 247, 0.12);
+  --accent-rose-bg: #fff1f2;
+  --accent-purple: #8b5cf6;
+  --accent-purple-bg: #f5f3ff;
   --accent-cyan: #06b6d4;
-  --accent-cyan-bg: rgba(6, 182, 212, 0.12);
+  --accent-cyan-bg: #ecfeff;
 
   /* Semantic Alerts */
   --success: var(--accent-emerald);
@@ -67,8 +67,8 @@
   --warning-bg: var(--accent-amber-bg);
   --error: var(--accent-rose);
   --error-bg: var(--accent-rose-bg);
-  --info: var(--primary-500);
-  --info-bg: var(--primary-100);
+  --info: var(--primary-600);
+  --info-bg: var(--primary-50);
 
   /* Typography */
   --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -110,12 +110,13 @@
   --radius-2xl: 24px;
   --radius-full: 9999px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 14px -2px rgba(0, 0, 0, 0.6), 0 2px 6px -1px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 14px 32px -4px rgba(0, 0, 0, 0.7), 0 4px 14px -2px rgba(0, 0, 0, 0.5);
-  --shadow-glow-primary: 0 0 24px rgba(59, 130, 246, 0.25);
-  --shadow-glow-emerald: 0 0 24px rgba(16, 185, 129, 0.25);
+  /* Shadows (Soft & Multi-layered for Light Mode) */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 8px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 30px -6px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  --shadow-glow-primary: 0 4px 20px rgba(59, 130, 246, 0.25);
+  --shadow-glow-emerald: 0 4px 20px rgba(16, 185, 129, 0.25);
 
   /* Layout Constants */
   --sidebar-width: 260px;
@@ -276,20 +277,129 @@ button, input, select, textarea {
 .text-error { color: var(--error); }
 .text-center { text-align: center; }
 
-/* Micro-animations */
+/* ==========================================================================
+   Visual Effects & Ultra-Modern Design System Utilities
+   ========================================================================== */
+
+/* Gradient Text (Enhanced contrast for Light Theme) */
+.text-gradient-primary {
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #0284c7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-aurora {
+  background: linear-gradient(135deg, #0284c7 0%, #4f46e5 50%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-sunset {
+  background: linear-gradient(135deg, #d97706 0%, #e11d48 50%, #db2777 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-emerald {
+  background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #0284c7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Glassmorphism Classes (Light Crisp Theme) */
+.glass-card {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle) !important;
+  box-shadow: var(--shadow-md);
+}
+
+.glass-surface {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle) !important;
+  box-shadow: var(--shadow-sm);
+}
+
+.glow-border {
+  position: relative;
+}
+
+.glow-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(139, 92, 246, 0.3), rgba(226, 232, 240, 0.8));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Micro-Interaction Classes */
+.hover-lift {
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px -6px rgba(0, 0, 0, 0.1), 0 0 16px 0 rgba(59, 130, 246, 0.12);
+  border-color: var(--primary-300) !important;
+}
+
+.hover-zoom-img {
+  overflow: hidden;
+}
+
+.hover-zoom-img img {
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.5s ease;
+}
+
+.hover-zoom-img:hover img {
+  transform: scale(1.06);
+  filter: brightness(1.06);
+}
+
+/* Staggered Animations */
+.stagger-1 { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
+.stagger-2 { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both; }
+.stagger-3 { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.20s both; }
+.stagger-4 { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both; }
+
+/* Micro-animations & Keyframes */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(-12px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.95); }
+  70% { transform: scale(1.02); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
 @keyframes pulseGlow {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.15); filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.8)); }
+}
+
+@keyframes shimmerWave {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+@keyframes floatBlob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(15px, -15px) scale(1.05); }
 }
 
 .animate-fade-in {
@@ -297,5 +407,61 @@ button, input, select, textarea {
 }
 
 .animate-slide-down {
-  animation: slideDown var(--transition-normal) ease-out forwards;
+  animation: slideDown var(--transition-normal) cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+.animate-pop-in {
+  animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ============================================
+   Interactive Mouse Spotlight & Glow
+   ============================================ */
+.spotlight-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.spotlight-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(59, 130, 246, 0.15),
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.spotlight-card:hover::before {
+  opacity: 1;
+}
+
+/* ============================================
+   3D Perspective Tilt Card
+   ============================================ */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  will-change: transform;
+}
+
+.tilt-card:hover {
+  transform: perspective(1000px) translateY(-6px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6), 0 0 25px rgba(59, 130, 246, 0.2);
+}
+
+/* ============================================
+   Progress Ring & Glow
+   ============================================ */
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+

@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/GlobeTrotter-Travel%20Planner-0ea5e9?style=for-the-badge&logo=airplayvideo&logoColor=white" alt="GlobeTrotter" />
+  <img src="https://img.shields.io/badge/Wayfare%20OS-Travel%20Operating%20System-0ea5e9?style=for-the-badge&logo=airplayvideo&logoColor=white" alt="Wayfare OS" />
 </p>
 
-# 🌍 GlobeTrotter — Personalized Travel & Itinerary Planning Platform
+# 🌍 Wayfare OS — Travel Planning & Itinerary Operating System
 
 [![React](https://img.shields.io/badge/React-19.x-61DAFB?style=flat-square&logo=react)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-8.x-646CFF?style=flat-square&logo=vite)](https://vitejs.dev/)
@@ -11,9 +11,9 @@
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=flat-square&logo=node.js)](https://nodejs.org/)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 
-**GlobeTrotter** is a full-stack travel planning and itinerary management platform that empowers travelers to plan personalized multi-day trips, build day-by-day itineraries with drag-and-drop, explore 40+ famous world destinations, track budgets & expenses, visualize trips on interactive maps, and share travel plans with a global community.
+**Wayfare OS** is a full-stack personal academic travel planning and itinerary management platform that empowers travelers to plan personalized multi-day trips, build day-by-day itineraries with drag-and-drop, explore 40+ famous world destinations, track budgets & expenses, visualize trips on interactive maps, and share travel plans with a global community.
 
-> Built for the **ODOO LD-CE Hackathon** 🚀
+> 🎓 **Academic Engineering Project** — Full-Stack Travel Platform
 
 ---
 
@@ -126,7 +126,7 @@
 ## 📁 Project Structure
 
 ```
-ODOO-LDCE/
+wayfare-os/
 ├── backend/
 │   ├── database/
 │   │   ├── schema.sql              # Full PostgreSQL schema (14 tables)
@@ -308,8 +308,8 @@ The PostgreSQL database consists of **14 tables** with custom ENUM types:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/Jainish6775/ODOO-LDCE.git
-cd ODOO-LDCE
+git clone https://github.com/Jainish6775/wayfare-os.git
+cd wayfare-os
 ```
 
 ### 2. Setup Backend
@@ -384,11 +384,10 @@ curl http://localhost:5000/api/health
 
 ---
 
-## 👥 Team
+## 👨‍💻 Developer & Author
 
-Built with ❤️ by **Team LD-CE** for the ODOO Hackathon.
-
-- **Jainish Talpara** — [GitHub](https://github.com/Jainish6775)
+Built with ❤️ by **Jainish Talpara** — [GitHub](https://github.com/Jainish6775)
+*Academic Capstone / Full-Stack Software Engineering Project*
 
 ---
 

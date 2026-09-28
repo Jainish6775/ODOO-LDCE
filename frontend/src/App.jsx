@@ -3,14 +3,23 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AppLayout from './components/layout/AppLayout';
+import PublicLayout from './components/public/PublicLayout';
 import LoadingScreen from './components/common/LoadingScreen';
 import ErrorBoundary from './components/common/ErrorBoundary';
+import MouseEffectsHandler from './components/common/MouseEffectsHandler';
 import './index.css';
 import './styles/components.css';
 
-// Lazy-loaded route pages for code-splitting and performance
+// Public marketing & landing pages
+const Home = lazy(() => import('./pages/public/Home'));
+const About = lazy(() => import('./pages/public/About'));
+const Contact = lazy(() => import('./pages/public/Contact'));
+
+// Auth pages
 const Login = lazy(() => import('./pages/auth/Login'));
 const Register = lazy(() => import('./pages/auth/Register'));
+
+// App workspace pages
 const Dashboard = lazy(() => import('./pages/dashboard/Dashboard'));
 const MyTrips = lazy(() => import('./pages/trips/MyTrips'));
 const CreateTrip = lazy(() => import('./pages/trips/CreateTrip'));
@@ -38,14 +47,14 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
-// Public Route (redirect to dashboard if already authenticated)
-function PublicRoute({ children }) {
+// Public Auth Route (redirect to dashboard if already authenticated)
+function PublicAuthRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
 
   if (loading) return <LoadingScreen />;
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return children;
@@ -56,6 +65,7 @@ function App() {
     <ErrorBoundary>
       <BrowserRouter>
         <AuthProvider>
+          <MouseEffectsHandler />
           <Toaster
             position="top-right"
             toastOptions={{
@@ -72,28 +82,35 @@ function App() {
 
           <Suspense fallback={<LoadingScreen />}>
             <Routes>
-              {/* Public auth routes */}
+              {/* Public Marketing Layout & Pages */}
+              <Route element={<PublicLayout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+              </Route>
+
+              {/* Public Auth routes */}
               <Route path="/login" element={
-                <PublicRoute><Login /></PublicRoute>
+                <PublicAuthRoute><Login /></PublicAuthRoute>
               } />
               <Route path="/register" element={
-                <PublicRoute><Register /></PublicRoute>
+                <PublicAuthRoute><Register /></PublicAuthRoute>
               } />
 
-              {/* Protected routes with app shell */}
-              <Route path="/" element={
+              {/* Protected App Workspace Routes with Sidebar & Command Header */}
+              <Route element={
                 <ProtectedRoute><AppLayout /></ProtectedRoute>
               }>
-                <Route index element={<Dashboard />} />
-                <Route path="explore" element={<Explore />} />
-                <Route path="my-trips" element={<MyTrips />} />
-                <Route path="trips/new" element={<CreateTrip />} />
-                <Route path="trips/:id/itinerary" element={<ItineraryBuilder />} />
-                <Route path="trips/:id" element={<TripDetails />} />
-                <Route path="calendar" element={<TripCalendar />} />
-                <Route path="community" element={<Community />} />
-                <Route path="saved" element={<Saved />} />
-                <Route path="profile" element={<Profile />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/explore" element={<Explore />} />
+                <Route path="/my-trips" element={<MyTrips />} />
+                <Route path="/trips/new" element={<CreateTrip />} />
+                <Route path="/trips/:id/itinerary" element={<ItineraryBuilder />} />
+                <Route path="/trips/:id" element={<TripDetails />} />
+                <Route path="/calendar" element={<TripCalendar />} />
+                <Route path="/community" element={<Community />} />
+                <Route path="/saved" element={<Saved />} />
+                <Route path="/profile" element={<Profile />} />
               </Route>
 
               {/* Catch-all 404 */}

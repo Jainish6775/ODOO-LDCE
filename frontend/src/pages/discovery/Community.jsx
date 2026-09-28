@@ -78,7 +78,7 @@ export default function Community() {
             badge: 'VERIFIED EXPLORER'
           },
           timeAgo: new Date(trip.created_at || Date.now()).toLocaleDateString(),
-          content: trip.description || 'Check out my expedition itinerary dossier on GlobeTrotter!',
+          content: trip.description || 'Check out my expedition itinerary dossier on Wayfare!',
           tripDetails: {
             id: trip.id,
             title: trip.name,

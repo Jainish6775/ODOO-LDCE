@@ -13,7 +13,7 @@ export default function Sidebar() {
   };
 
   const mainLinks = [
-    { to: '/', label: 'Command Center', icon: <FiHome />, badge: 'LIVE' },
+    { to: '/dashboard', label: 'Command Center', icon: <FiHome />, badge: 'LIVE' },
     { to: '/my-trips', label: 'Expedition Queue', icon: <FiMap /> },
     { to: '/calendar', label: 'Flight & Stay Matrix', icon: <FiCalendar /> },
   ];
@@ -29,14 +29,14 @@ export default function Sidebar() {
       
       {/* Workspace Switcher Header */}
       <div className="sidebar-workspace-header">
-        <div className="workspace-selector-btn">
-          <img src="/logo.jpg" alt="GlobeTrotter" className="workspace-logo-img" />
+        <Link to="/dashboard" className="workspace-selector-btn">
+          <img src="/logo.jpg" alt="Wayfare" className="workspace-logo-img" />
           <div className="workspace-text-wrap">
-            <span className="workspace-title">GlobeTrotter OS</span>
+            <span className="workspace-title">Wayfare OS</span>
             <span className="workspace-tier">EXECUTIVE PRO</span>
           </div>
           <FiChevronDown className="workspace-caret" size={14} />
-        </div>
+        </Link>
       </div>
 
       {/* Plan New Expedition CTA */}
@@ -55,7 +55,7 @@ export default function Sidebar() {
               key={link.to}
               to={link.to}
               className={({ isActive }) => `sidebar-nav-item ${isActive ? 'active' : ''}`}
-              end={link.to === '/'}
+              end={link.to === '/dashboard'}
             >
               <span className="nav-icon">{link.icon}</span>
               <span className="nav-label">{link.label}</span>

@@ -50,9 +50,7 @@ const expensesController = {
       const directExpRes = await db.query('SELECT SUM(amount) as total FROM expenses WHERE trip_id = $1', [tripId]);
       const directExpenses = Number(directExpRes.rows[0].total || 0);
 
-      // We should ideally aggregate scheduled_activities, accommodations, transports too
-      // For this hackathon MVP, we can assume 'expenses' table tracks all out-of-pocket, 
-      // or we do a massive UNION to sum them all. Let's do a UNION sum.
+      // Aggregate expenses and sub-items using a UNION query sum.
       
       const totalSumRes = await db.query(`
         SELECT SUM(total_cost) as grand_total FROM (

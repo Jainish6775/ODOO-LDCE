@@ -5,6 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { tripsAPI } from '../../services/api';
 import { defaultRegions, sampleTrips } from '../../data/sampleTrips';
 import { Skeleton } from '../../components/common/Skeleton';
+import AnimatedCounter from '../../components/common/AnimatedCounter';
 import './Dashboard.css';
 
 export default function Dashboard() {
@@ -203,49 +204,49 @@ export default function Dashboard() {
 
       {/* KPI Metrics Summary Grid */}
       <div className="command-kpi-grid mt-6">
-        <div className="command-kpi-card">
+        <div className="command-kpi-card spotlight-card">
           <div className="kpi-top">
             <span className="kpi-metric-title">TOTAL EXPEDITIONS</span>
             <span className="kpi-icon-badge blue"><FiActivity size={14} /></span>
           </div>
           <div className="kpi-metric-row">
-            <span className="kpi-metric-num">{totalTripsCount}</span>
+            <span className="kpi-metric-num"><AnimatedCounter value={totalTripsCount} /></span>
             <span className="kpi-status-chip emerald">{activeTripsCount} Live</span>
           </div>
           <span className="kpi-caption">Managed travel workflows</span>
         </div>
 
-        <div className="command-kpi-card">
+        <div className="command-kpi-card spotlight-card">
           <div className="kpi-top">
             <span className="kpi-metric-title">GLOBAL DESTINATIONS</span>
             <span className="kpi-icon-badge emerald"><FiGlobe size={14} /></span>
           </div>
           <div className="kpi-metric-row">
-            <span className="kpi-metric-num">40</span>
+            <span className="kpi-metric-num"><AnimatedCounter value={40} /></span>
             <span className="kpi-status-chip blue">Worldwide</span>
           </div>
           <span className="kpi-caption">Verified cities & attractions</span>
         </div>
 
-        <div className="command-kpi-card">
+        <div className="command-kpi-card spotlight-card">
           <div className="kpi-top">
             <span className="kpi-metric-title">BUDGET ENVELOPE</span>
             <span className="kpi-icon-badge amber"><FiTrendingUp size={14} /></span>
           </div>
           <div className="kpi-metric-row">
-            <span className="kpi-metric-num">${totalBudgetTracked.toLocaleString()}</span>
+            <span className="kpi-metric-num"><AnimatedCounter value={totalBudgetTracked} prefix="$" /></span>
             <span className="kpi-status-chip amber">USD</span>
           </div>
           <span className="kpi-caption">96% On-budget track record</span>
         </div>
 
-        <div className="command-kpi-card">
+        <div className="command-kpi-card spotlight-card">
           <div className="kpi-top">
             <span className="kpi-metric-title">CHECKLIST READINESS</span>
             <span className="kpi-icon-badge purple"><FiShield size={14} /></span>
           </div>
           <div className="kpi-metric-row">
-            <span className="kpi-metric-num">{checklistDoneCount}/{checklist.length}</span>
+            <span className="kpi-metric-num"><AnimatedCounter value={checklistDoneCount} />/{checklist.length}</span>
             <span className="kpi-status-chip purple">{Math.round((checklistDoneCount/checklist.length)*100)}%</span>
           </div>
           <span className="kpi-caption">Departure clearance tasks</span>

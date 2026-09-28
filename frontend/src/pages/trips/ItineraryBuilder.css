@@ -122,8 +122,9 @@
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: var(--weight-bold);
-  color: var(--primary-400);
-  background: var(--primary-100);
+  color: var(--primary-600);
+  background: var(--primary-50);
+  border: 1px solid var(--primary-200);
   padding: 2px 7px;
   border-radius: var(--radius-xs);
 }

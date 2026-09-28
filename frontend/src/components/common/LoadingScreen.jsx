@@ -27,12 +27,12 @@ export default function LoadingScreen() {
       <div className="preloader-content-card">
         {/* Glowing Logo Avatar */}
         <div className="preloader-logo-ring">
-          <img src="/logo.jpg" alt="GlobeTrotter" className="preloader-logo-img" />
+          <img src="/logo.jpg" alt="Wayfare" className="preloader-logo-img" />
           <div className="logo-pulse-aura"></div>
         </div>
 
         {/* Brand Title & Tagline */}
-        <h1 className="preloader-brand-title">GlobeTrotter</h1>
+        <h1 className="preloader-brand-title">Wayfare</h1>
         <p className="preloader-tagline">Curating your ultimate travel experience...</p>
 
         {/* Progress Bar Container */}

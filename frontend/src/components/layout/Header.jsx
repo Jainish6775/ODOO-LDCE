@@ -1,23 +1,34 @@
-import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { FiHome, FiCompass, FiMap, FiCalendar, FiUsers, FiBookmark, FiUser, FiLogOut, FiBell, FiMenu, FiX, FiSearch, FiPlus } from 'react-icons/fi';
+import { 
+  FiHome, 
+  FiCompass, 
+  FiMap, 
+  FiCalendar, 
+  FiUsers, 
+  FiBookmark, 
+  FiUser, 
+  FiLogOut, 
+  FiBell, 
+  FiSearch, 
+  FiPlus,
+  FiChevronDown
+} from 'react-icons/fi';
 import './Header.css';
 
 export default function Header() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const menuRef = useRef(null);
   const notifRef = useRef(null);
 
   const [notifications, setNotifications] = useState([
-    { id: 1, title: 'Trip Updated', message: 'Activity added to Kyoto itinerary.', time: '10m ago', unread: true },
-    { id: 2, title: 'Community Interaction', message: 'Sarah liked your travel guide.', time: '1h ago', unread: true },
-    { id: 3, title: 'Upcoming Flight', message: 'Trip to Tokyo starts in 3 days.', time: '5h ago', unread: false },
+    { id: 1, title: 'Itinerary Updated', message: 'Activity added to Kyoto plan.', time: '10m ago', unread: true },
+    { id: 2, title: 'Community Interaction', message: 'Traveler liked your shared guide.', time: '1h ago', unread: true },
+    { id: 3, title: 'Upcoming Trip', message: 'Journey to Tokyo starts in 3 days.', time: '5h ago', unread: false },
   ]);
 
   const unreadCount = notifications.filter(n => n.unread).length;
@@ -35,11 +46,6 @@ export default function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Close mobile drawer on route change
-  useEffect(() => {
-    setShowMobileMenu(false);
-  }, [location]);
-
   const markAllRead = () => {
     setNotifications(notifications.map(n => ({ ...n, unread: false })));
   };
@@ -49,64 +55,68 @@ export default function Header() {
     navigate('/login');
   };
 
-  const getPageTitle = () => {
-    const p = location.pathname;
-    if (p === '/') return 'Overview';
-    if (p.startsWith('/my-trips')) return 'My Trips';
-    if (p.startsWith('/trips/new')) return 'Create Trip';
-    if (p.includes('/itinerary')) return 'Itinerary Builder';
-    if (p.startsWith('/trips/')) return 'Trip Details';
-    if (p.startsWith('/calendar')) return 'Trip Calendar';
-    if (p.startsWith('/explore')) return 'Explore Destinations';
-    if (p.startsWith('/community')) return 'Community Feed';
-    if (p.startsWith('/saved')) return 'Saved Wishlist';
-    if (p.startsWith('/profile')) return 'Account Profile';
-    return 'GlobeTrotter';
-  };
-
-  const navLinks = [
-    { to: '/', label: 'Overview', icon: <FiHome /> },
-    { to: '/my-trips', label: 'My Trips', icon: <FiMap /> },
-    { to: '/calendar', label: 'Calendar', icon: <FiCalendar /> },
-    { to: '/explore', label: 'Explore', icon: <FiCompass /> },
-    { to: '/community', label: 'Community', icon: <FiUsers /> },
-    { to: '/saved', label: 'Saved', icon: <FiBookmark /> },
+  const navItems = [
+    { to: '/dashboard', label: 'Dashboard', icon: <FiHome size={15} /> },
+    { to: '/explore', label: 'Explore', icon: <FiCompass size={15} /> },
+    { to: '/my-trips', label: 'My Trips', icon: <FiMap size={15} /> },
+    { to: '/calendar', label: 'Calendar', icon: <FiCalendar size={15} /> },
+    { to: '/community', label: 'Community', icon: <FiUsers size={15} /> },
+    { to: '/saved', label: 'Saved', icon: <FiBookmark size={15} /> },
   ];
 
   return (
-    <header className="saas-header">
-      <div className="header-inner">
+    <header className="top-navbar">
+      <div className="top-navbar-container">
         
-        {/* Left: Mobile Brand & Desktop Breadcrumb Title */}
-        <div className="header-left">
-          {/* Mobile Logo */}
-          <Link to="/" className="header-logo show-mobile">
-            <img src="/logo.jpg" alt="GlobeTrotter" className="header-logo-img" />
-            <span className="header-logo-text">GlobeTrotter</span>
+        {/* Left: Brand Logo */}
+        <div className="navbar-brand-section">
+          <Link to="/dashboard" className="navbar-brand-link">
+            <img src="/logo.jpg" alt="Wayfare" className="navbar-brand-img" />
+            <div className="navbar-brand-text">
+              <span className="navbar-brand-name">Wayfare</span>
+              <span className="navbar-brand-os">OS</span>
+            </div>
           </Link>
-
-          {/* Desktop Page Title / Breadcrumb */}
-          <div className="header-page-title hide-mobile">
-            <span className="title-section">Workspace</span>
-            <span className="title-divider">/</span>
-            <span className="title-active">{getPageTitle()}</span>
-          </div>
         </div>
 
-        {/* Center: Global Search Bar */}
-        <div className="header-search-bar hide-mobile" onClick={() => navigate('/explore')}>
-          <FiSearch className="header-search-icon" />
-          <span className="header-search-placeholder">Search destinations, trips, activities...</span>
-          <kbd className="header-search-kbd">⌘K</kbd>
-        </div>
+        {/* Center: Primary Navigation Links */}
+        <nav className="navbar-nav-links">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) => `nav-tab-item ${isActive ? 'active' : ''}`}
+            >
+              <span className="nav-tab-icon">{item.icon}</span>
+              <span>{item.label}</span>
+            </NavLink>
+          ))}
+        </nav>
 
         {/* Right: Quick Actions, Notifications & Profile */}
-        <div className="header-actions">
+        <div className="navbar-actions-section">
           
+          {/* Quick Search */}
+          <button 
+            type="button" 
+            className="navbar-search-btn hide-tablet"
+            onClick={() => navigate('/explore')}
+            title="Search destinations (⌘K)"
+          >
+            <FiSearch size={14} className="text-muted" />
+            <span className="search-text">Search...</span>
+            <kbd className="search-kbd">⌘K</kbd>
+          </button>
+
+          {/* Plan Trip CTA */}
+          <Link to="/trips/new" className="btn btn-primary btn-sm navbar-plan-btn hide-mobile">
+            <FiPlus size={14} /> Plan Trip
+          </Link>
+
           {/* Notifications Dropdown */}
-          <div className="header-menu-container" ref={notifRef}>
+          <div className="navbar-dropdown-wrapper" ref={notifRef}>
             <button
-              className={`header-btn-icon ${showNotifications ? 'active' : ''}`}
+              className={`navbar-icon-btn ${showNotifications ? 'active' : ''}`}
               onClick={() => {
                 setShowNotifications(!showNotifications);
                 setShowUserMenu(false);
@@ -114,27 +124,27 @@ export default function Header() {
               title="Notifications"
             >
               <FiBell size={16} />
-              {unreadCount > 0 && <span className="notification-badge-dot"></span>}
+              {unreadCount > 0 && <span className="notif-dot"></span>}
             </button>
 
             {showNotifications && (
-              <div className="dropdown-panel notif-panel animate-slide-down">
+              <div className="navbar-dropdown-panel notif-dropdown animate-slide-down">
                 <div className="dropdown-panel-header">
-                  <span className="panel-title">Notifications</span>
+                  <span className="panel-heading">Notifications</span>
                   {unreadCount > 0 && (
-                    <button className="panel-action-link" onClick={markAllRead}>
+                    <button className="panel-link-action" onClick={markAllRead}>
                       Mark all as read
                     </button>
                   )}
                 </div>
-                <div className="notif-items-list">
+                <div className="notif-list-body">
                   {notifications.map(n => (
-                    <div key={n.id} className={`notif-item-row ${n.unread ? 'unread' : ''}`}>
-                      <div className="notif-title-row">
-                        <span className="notif-item-title">{n.title}</span>
-                        <span className="notif-item-time">{n.time}</span>
+                    <div key={n.id} className={`notif-entry ${n.unread ? 'unread' : ''}`}>
+                      <div className="notif-entry-top">
+                        <span className="notif-entry-title">{n.title}</span>
+                        <span className="notif-entry-time">{n.time}</span>
                       </div>
-                      <p className="notif-item-desc">{n.message}</p>
+                      <p className="notif-entry-msg">{n.message}</p>
                     </div>
                   ))}
                 </div>
@@ -143,9 +153,9 @@ export default function Header() {
           </div>
 
           {/* User Profile Menu */}
-          <div className="header-menu-container" ref={menuRef}>
+          <div className="navbar-dropdown-wrapper" ref={menuRef}>
             <button
-              className="header-user-trigger"
+              className="navbar-user-trigger"
               onClick={() => {
                 setShowUserMenu(!showUserMenu);
                 setShowNotifications(false);
@@ -154,80 +164,53 @@ export default function Header() {
               <img
                 src={user?.profile_image || '/images/user_profile.png'}
                 alt={user?.first_name || 'User'}
-                className="avatar avatar-sm"
+                className="navbar-avatar-img"
               />
-              <span className="header-user-name hide-mobile">
+              <span className="navbar-username hide-mobile">
                 {user?.first_name || 'Account'}
               </span>
+              <FiChevronDown size={13} className="text-muted hide-mobile" />
             </button>
 
             {showUserMenu && (
-              <div className="dropdown-panel user-panel animate-slide-down">
-                <div className="user-panel-info">
+              <div className="navbar-dropdown-panel user-dropdown animate-slide-down">
+                <div className="user-dropdown-header">
                   <img
                     src={user?.profile_image || '/images/user_profile.png'}
                     alt={user?.first_name || 'User'}
-                    className="avatar"
+                    className="avatar avatar-sm"
                   />
-                  <div className="user-panel-text">
-                    <span className="user-panel-name">
-                      {user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'Traveler' : 'Guest'}
+                  <div className="user-dropdown-details">
+                    <span className="user-name">
+                      {user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() || 'Explorer' : 'Traveler'}
                     </span>
-                    <span className="user-panel-email">{user?.email || 'traveler@globetrotter.com'}</span>
+                    <span className="user-email">{user?.email || 'user@wayfare.com'}</span>
                   </div>
                 </div>
                 
-                <div className="dropdown-divider"></div>
+                <div className="dropdown-separator"></div>
                 
-                <Link to="/profile" className="dropdown-item">
-                  <FiUser size={14} /> Profile & Settings
+                <Link to="/profile" className="dropdown-row-link">
+                  <FiUser size={14} /> Profile & Preferences
                 </Link>
-                <Link to="/saved" className="dropdown-item">
-                  <FiBookmark size={14} /> Saved Wishlist
+                <Link to="/saved" className="dropdown-row-link">
+                  <FiBookmark size={14} /> Saved Destinations
+                </Link>
+                <Link to="/" className="dropdown-row-link">
+                  <FiCompass size={14} /> Public Home
                 </Link>
 
-                <div className="dropdown-divider"></div>
+                <div className="dropdown-separator"></div>
 
-                <button className="dropdown-item logout" onClick={handleLogout}>
-                  <FiLogOut size={14} /> Log Out
+                <button className="dropdown-row-link logout-link" onClick={handleLogout}>
+                  <FiLogOut size={14} /> Sign Out
                 </button>
               </div>
             )}
           </div>
 
-          {/* Mobile Menu Toggle Button */}
-          <button
-            className="header-btn-icon show-mobile"
-            onClick={() => setShowMobileMenu(!showMobileMenu)}
-            aria-label="Toggle navigation"
-          >
-            {showMobileMenu ? <FiX size={18} /> : <FiMenu size={18} />}
-          </button>
         </div>
       </div>
-
-      {/* Mobile Drawer Menu */}
-      {showMobileMenu && (
-        <div className="mobile-drawer-overlay animate-fade-in">
-          <div className="mobile-drawer-content">
-            <Link to="/trips/new" className="btn btn-primary btn-full mb-4">
-              <FiPlus /> Plan New Trip
-            </Link>
-            <nav className="mobile-drawer-nav">
-              {navLinks.map((link) => (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  className={({ isActive }) => `mobile-nav-link ${isActive ? 'active' : ''}`}
-                >
-                  <span className="mobile-nav-icon">{link.icon}</span>
-                  <span>{link.label}</span>
-                </NavLink>
-              ))}
-            </nav>
-          </div>
-        </div>
-      )}
     </header>
   );
 }

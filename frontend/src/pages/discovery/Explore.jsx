@@ -204,7 +204,7 @@ export default function Explore() {
           {destinations.map((dest) => (
             <div 
               key={dest.id} 
-              className="city-dossier-card"
+              className="city-dossier-card spotlight-card tilt-card"
               onClick={() => handleOpenDestinationModal(dest)}
             >
               <div className="city-thumb-wrap">

@@ -1,7 +1,7 @@
 {
-  "name": "globetrotter-backend",
+  "name": "wayfare-backend",
   "version": "1.0.0",
-  "description": "GlobeTrotter Travel Planning API",
+  "description": "Wayfare OS Travel Planning API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

@@ -161,10 +161,10 @@
 }
 
 .theme-pill-btn.active {
-  background: var(--primary-100);
+  background: var(--primary-50);
   border-color: var(--primary-500);
-  color: var(--primary-400);
-  box-shadow: 0 0 12px rgba(59, 130, 246, 0.2);
+  color: var(--primary-700);
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.15);
 }
 
 .theme-pill-icon {
@@ -244,6 +244,6 @@
 .suggestion-meta {
   font-size: 10px;
   font-weight: var(--weight-bold);
-  color: var(--primary-400);
+  color: var(--primary-600);
   margin-top: 2px;
 }

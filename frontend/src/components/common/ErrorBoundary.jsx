@@ -13,7 +13,7 @@ export default class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('GlobeTrotter ErrorBoundary caught an error:', error, errorInfo);
+    console.error('Wayfare ErrorBoundary caught an error:', error, errorInfo);
   }
 
   handleReload = () => {
